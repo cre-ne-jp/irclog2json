@@ -6,9 +6,9 @@ project(tiarra2json CXX)
 
 set(CMAKE_CXX_FLAGS "-Wall -std=gnu++14 -DPICOJSON_USE_INT64")
 set(CMAKE_CXX_FLAGS_DEBUG "-g3 -O0")
-set(CMAKE_CXX_FLAGS_RELEASE "-O2 -s -DNDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-g3 -Og")
-set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os -s -DNDEBUG")
+set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os -DNDEBUG")
 
 include_directories(vendor/picojson)
 
