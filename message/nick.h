@@ -6,7 +6,7 @@
 #include <ctime>
 #include <picojson.h>
 
-namespace tiarra2json {
+namespace irclog2json {
   namespace message {
     class Nick : public MessageBase {
     public:

@@ -10,7 +10,7 @@
 #include <ctime>
 #include <picojson.h>
 
-namespace tiarra2json {
+namespace irclog2json {
   Converter::Converter(std::ifstream& f, std::string const& channel, struct tm const& tm_date) :
     f_(f),
     channel_(channel),

@@ -4,7 +4,7 @@
 #include <ctime>
 #include <picojson.h>
 
-namespace tiarra2json {
+namespace irclog2json {
   namespace message {
     Notice::Notice(std::string const& channel, struct tm const& timestamp, std::string const& nick, std::string const& message) :
       MessageBase::MessageBase("NOTICE", channel, timestamp, nick),

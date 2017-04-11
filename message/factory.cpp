@@ -59,7 +59,7 @@ namespace {
   }
 }
 
-namespace tiarra2json {
+namespace irclog2json {
   namespace message {
 
     Factory::Factory(std::string const& channel, struct tm const& tm_date) :

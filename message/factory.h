@@ -7,7 +7,7 @@
 #include <memory>
 #include <ctime>
 
-namespace tiarra2json {
+namespace irclog2json {
   namespace message {
     class Factory {
     public:

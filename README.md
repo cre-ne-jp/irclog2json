@@ -1,4 +1,4 @@
-# tiarra2json
+# irclog2json
 
 Tiarraで取得したIRCログファイルをJSONファイルに変換します。変換後のファイルはlog-archiverのデータベースへのインポートに使用することができます。
 
@@ -25,7 +25,7 @@ make -j N
 ## 使い方
 
 ```
-tiarra2json /path/to/yyyymmdd.txt チャンネル名
+irclog2json /path/to/yyyymmdd.txt チャンネル名
 ```
 
 * IRCログのファイル名から日付を決定します。

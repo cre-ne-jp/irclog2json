@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
     std::exit(1);
   }
 
-  tiarra2json::Converter converter(ifs, channel, tm_date);
+  irclog2json::Converter converter(ifs, channel, tm_date);
   picojson::value result = converter.Convert();
 
   ifs.close();

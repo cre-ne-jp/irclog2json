@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 
 set(CMAKE_VERBOSE_MAKEFILE 0)
 
-project(tiarra2json CXX)
+project(irclog2json CXX)
 
 set(CMAKE_CXX_FLAGS "-Wall -std=gnu++14 -DPICOJSON_USE_INT64")
 set(CMAKE_CXX_FLAGS_DEBUG "-g3 -O0")
@@ -12,9 +12,9 @@ set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os -DNDEBUG")
 
 include_directories(vendor/picojson)
 
-set(target tiarra2json)
+set(target irclog2json)
 add_executable(${target}
-  tiarra2json.cpp
+  irclog2json.cpp
   converter.cpp
   message/factory.cpp
   message/message_base.cpp

@@ -4,7 +4,7 @@
 #include <ctime>
 #include <picojson.h>
 
-namespace tiarra2json {
+namespace irclog2json {
   namespace message {
     Kick::Kick(std::string const& channel, struct tm const& timestamp, std::string const& nick, std::string const& target, std::string const& message) :
       MessageBase::MessageBase("KICK", channel, timestamp, nick),

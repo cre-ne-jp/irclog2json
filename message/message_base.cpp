@@ -3,7 +3,7 @@
 #include <ctime>
 #include <picojson.h>
 
-namespace tiarra2json {
+namespace irclog2json {
   namespace message {
     MessageBase::MessageBase(const char* type, std::string const& channel, struct tm const& timestamp, std::string const& nick) :
       type_(type),
