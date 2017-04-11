@@ -114,11 +114,12 @@ static bool ParseOptions(
 ) {
   constexpr struct option long_options[] = {
     {"tiarra", no_argument, nullptr, 't'},
+    {"madoka", no_argument, nullptr, 'm'},
     {"pretty", no_argument, nullptr, 'p'},
     {"help", no_argument, nullptr, 'h'},
     {0, 0, 0, 0}
   };
-  const char* optstring = "tph";
+  const char* optstring = "tmph";
 
   print_usage = false;
 
@@ -135,6 +136,10 @@ static bool ParseOptions(
     case 't':
       // -t, --tiarra
       options.log_format = irclog2json::Options::LogFormat::Tiarra;
+      break;
+    case 'm':
+      // -m, --madoka
+      options.log_format = irclog2json::Options::LogFormat::Madoka;
       break;
     case 'p':
       // -p, --pretty
@@ -160,6 +165,7 @@ static bool ParseOptions(
 static void PrintUsage(char* argv0, std::ostream& os) {
   os << "Usage: " << argv0 << " -t [-p] LOG_FILE CHANNEL" << std::endl;
   os << "  -t, --tiarra      specify that the log file is Tiarra format" << std::endl;
+  os << "  -m, --madoka      specify that the log file is madoka format" << std::endl;
   os << "  -p, --pretty      output pretty-printed JSON" << std::endl;
   os << "  -h, --help        display this help and exit" << std::endl;
 }

@@ -9,7 +9,9 @@ namespace irclog2json {
       /** @brief 未指定。 */
       NotSpecified,
       /** @brief Tiarraが出力したログ。 */
-      Tiarra
+      Tiarra,
+      /** @brief madokaが出力したログ。 */
+      Madoka
     };
 
     /** @brief ログの書式。 */
