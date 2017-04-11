@@ -1,14 +1,9 @@
 #include "factory.h"
 
 #include "message_base.h"
-#include "privmsg.h"
-#include "notice.h"
-#include "nick.h"
+#include "basic_message.h"
 #include "join.h"
-#include "part.h"
-#include "quit.h"
 #include "kick.h"
-#include "topic.h"
 
 #include <string>
 #include <regex>
@@ -78,7 +73,7 @@ namespace irclog2json {
         std::string nick(m[4].length() > 0 ? m[4] : m[5]);
         std::string message(RemoveControlCodes(m[6].str()));
 
-        return std::make_unique<Privmsg>(channel_, timestamp, nick, message);
+        return std::make_unique<BasicMessage>("PRIVMSG", channel_, timestamp, nick, message);
       }
 
       if (regex_match(line, m, ReNotice)) {
@@ -87,7 +82,7 @@ namespace irclog2json {
         std::string nick(m[4].length() > 0 ? m[4] : m[5]);
         std::string message(RemoveControlCodes(m[6].str()));
 
-        return std::make_unique<Notice>(channel_, timestamp, nick, message);
+        return std::make_unique<BasicMessage>("NOTICE", channel_, timestamp, nick, message);
       }
 
       if (regex_match(line, m, ReNick1) || regex_match(line, m, ReNick2)) {
@@ -96,7 +91,7 @@ namespace irclog2json {
         std::string nick(m[4]);
         std::string new_nick(m[5]);
 
-        return std::make_unique<Nick>(channel_, timestamp, nick, new_nick);
+        return std::make_unique<BasicMessage>("NOTICE", channel_, timestamp, nick, new_nick);
       }
 
       if (regex_match(line, m, ReJoin)) {
@@ -115,7 +110,7 @@ namespace irclog2json {
         std::string nick(m[4]);
         std::string message(RemoveControlCodes(m[5].str()));
 
-        return std::make_unique<Part>(channel_, timestamp, nick, message);
+        return std::make_unique<BasicMessage>("PART", channel_, timestamp, nick, message);
       }
 
       if (regex_match(line, m, ReQuit)) {
@@ -124,7 +119,7 @@ namespace irclog2json {
         std::string nick(m[4]);
         std::string message(RemoveControlCodes(m[5].str()));
 
-        return std::make_unique<Quit>(channel_, timestamp, nick, message);
+        return std::make_unique<BasicMessage>("QUIT", channel_, timestamp, nick, message);
       }
 
       if (regex_match(line, m, ReKick)) {
@@ -143,7 +138,7 @@ namespace irclog2json {
         std::string nick(m[4]);
         std::string message(RemoveControlCodes(m[5].str()));
 
-        return std::make_unique<Topic>(channel_, timestamp, nick, message);
+        return std::make_unique<BasicMessage>("TOPIC", channel_, timestamp, nick, message);
       }
 
       return std::unique_ptr<MessageBase>(nullptr);

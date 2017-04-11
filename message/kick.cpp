@@ -1,4 +1,4 @@
-#include "message_base.h"
+#include "basic_message.h"
 #include "kick.h"
 
 #include <ctime>
@@ -7,17 +7,15 @@
 namespace irclog2json {
   namespace message {
     Kick::Kick(std::string const& channel, struct tm const& timestamp, std::string const& nick, std::string const& target, std::string const& message) :
-      MessageBase::MessageBase("KICK", channel, timestamp, nick),
-      target_(target),
-      message_(message)
+      BasicMessage::BasicMessage("KICK", channel, timestamp, nick, message),
+      target_(target)
     {
     }
 
     picojson::object Kick::DoToJsonObject() const {
-      picojson::object m = MessageBase::DoToJsonObject();
+      picojson::object m = BasicMessage::DoToJsonObject();
 
       m["target"] = picojson::value(target_);
-      m["message"] = picojson::value(message_);
 
       return m;
     }

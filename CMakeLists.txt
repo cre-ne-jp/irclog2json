@@ -18,12 +18,7 @@ add_executable(${target}
   converter.cpp
   message/factory.cpp
   message/message_base.cpp
-  message/privmsg.cpp
-  message/notice.cpp
-  message/nick.cpp
+  message/basic_message.cpp
   message/join.cpp
-  message/part.cpp
-  message/quit.cpp
   message/kick.cpp
-  message/topic.cpp
 )
