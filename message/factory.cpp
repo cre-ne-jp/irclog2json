@@ -38,7 +38,7 @@
 #define NICK_MESSAGE_PATTERN_2 R"((\d{2}):(\d{2}):(\d{2}) My nick is changed \(()" NICK_PATTERN ") [-=]> (" NICK_PATTERN R"()\))"
 #define JOIN_PATTERN R"((\d{2}):(\d{2}):(\d{2}) \+ [+@]?()" NICK_PATTERN R"() \()" NICK_PATTERN "!~?(" USER_PATTERN ")@(" HOST_PATTERN R"()\) to )" TIARRA_CHANNEL_PATTERN
 #define PART_PATTERN R"((\d{2}):(\d{2}):(\d{2}) - ()" NICK_PATTERN ") from " TIARRA_CHANNEL_PATTERN R"((?: \((.*)\))?)"
-#define QUIT_PATTERN R"((\d{2}):(\d{2}):(\d{2}) ! ()" NICK_PATTERN R"() \((.*?)\))"
+#define QUIT_PATTERN R"((\d{2}):(\d{2}):(\d{2}) ! ()" NICK_PATTERN R"() \((.*)\))"
 #define KICK_PATTERN R"((\d{2}):(\d{2}):(\d{2}) - ()" NICK_PATTERN ") by (" TARGET_PATTERN ") from " TIARRA_CHANNEL_PATTERN R"((?: \((.*)\))?)"
 #define TOPIC_PATTERN R"((\d{2}):(\d{2}):(\d{2}) Topic of channel )" TIARRA_CHANNEL_PATTERN " by (" TARGET_PATTERN "): (.*)"
 
