@@ -1,12 +1,19 @@
+#pragma once
+
 #include <string>
 #include <fstream>
 #include <ctime>
 #include <picojson.h>
 
 namespace irclog2json {
+  namespace message {
+    class LineConverterBase;
+  }
+
   class Converter {
   public:
-    Converter(std::ifstream& f, std::string const& channel, struct tm const& tm_date);
+    Converter(std::ifstream& f,
+              message::LineConverterBase const& line_converter);
     ~Converter() = default;
 
     Converter(Converter const&) = delete;
@@ -18,7 +25,6 @@ namespace irclog2json {
 
   private:
     std::ifstream& f_;
-    const std::string channel_;
-    const struct tm tm_date_;
+    message::LineConverterBase const& line_converter_;
   };
 }

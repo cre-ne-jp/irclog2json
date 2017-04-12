@@ -1,4 +1,6 @@
-#include "factory.h"
+#include "line_converter_base.h"
+#include "line_converter_re.h"
+#include "tiarra_log_line_converter.h"
 
 #include "message_base.h"
 #include "basic_message.h"
@@ -10,22 +12,7 @@
 #include <memory>
 #include <ctime>
 
-#define RE_LETTER "[A-Za-z]"
-#define RE_SPECIAL R"([\x5B-\x60\x7B-\x7D])"
-// RFC 2812 より寛容
-#define NICK_PATTERN "(?:" RE_LETTER R"(|\d|)" RE_SPECIAL "|-)+"
-#define USER_PATTERN R"([^\x00\x0A\x0D\x20\x40]+)"
-#define RE_CHANSTRING R"([^\x00\x07\x0A\x0D\x20,:]+)"
-#define CHANNEL_PATTERN "[#+&]" RE_CHANSTRING
 #define TIARRA_CHANNEL_PATTERN CHANNEL_PATTERN R"(@\w+)"
-
-#define RE_IP4ADDR R"((?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}))"
-// ホスト名はとりあえず IPv4 のみ
-#define RE_HOSTADDR RE_IP4ADDR
-#define RE_SHORTNAME "(?:" RE_LETTER R"(|\d)(?:)" RE_LETTER R"(|\d|-)*(?:)" RE_LETTER R"(|\d)*)"
-#define RE_HOSTNAME RE_SHORTNAME R"((?:\.)" RE_SHORTNAME R"()*\.?)"
-#define HOST_PATTERN "(?:" RE_HOSTNAME "|" RE_HOSTADDR ")"
-#define TARGET_PATTERN "(?:" NICK_PATTERN "|" HOST_PATTERN ")"
 
 #define PRIVMSG_PATTERN R"((\d{2}):(\d{2}):(\d{2}) (?:>(?:)" CHANNEL_PATTERN ":)?(" TARGET_PATTERN ")<|<(?:" CHANNEL_PATTERN ":)?(" TARGET_PATTERN ")>) (.+)"
 #define NOTICE_PATTERN R"((\d{2}):(\d{2}):(\d{2}) (?:\)(?:)" CHANNEL_PATTERN ":)?(" TARGET_PATTERN R"()\(|\((?:)" CHANNEL_PATTERN ":)?(" TARGET_PATTERN R"()\)) (.+))"
@@ -47,23 +34,13 @@ namespace {
   const std::regex ReQuit(QUIT_PATTERN);
   const std::regex ReKick(KICK_PATTERN);
   const std::regex ReTopic(TOPIC_PATTERN);
-
-  std::string RemoveControlCodes(std::string const& s) {
-    static const std::regex re(R"([\x02\x03\x1D\x1F\x16\x0F])");
-    return std::regex_replace(s, re, "");
-  }
 }
 
 namespace irclog2json {
   namespace message {
+    TiarraLogLineConverter::~TiarraLogLineConverter() = default;
 
-    Factory::Factory(std::string const& channel, struct tm const& tm_date) :
-      channel_(channel),
-      tm_date_(tm_date)
-    {
-    }
-
-    std::unique_ptr<MessageBase> Factory::ToMessage(std::string const& line) const {
+    std::unique_ptr<MessageBase> TiarraLogLineConverter::DoToMessage(std::string const& line) const {
       std::smatch m;
       struct tm timestamp;
 
@@ -142,14 +119,6 @@ namespace irclog2json {
       }
 
       return std::unique_ptr<MessageBase>(nullptr);
-    }
-
-    void Factory::SetHMS(struct tm& timestamp, std::smatch const& m) const {
-      timestamp = tm_date_;
-
-      timestamp.tm_hour = std::stoi(m[1]);
-      timestamp.tm_min = std::stoi(m[2]);
-      timestamp.tm_sec = std::stoi(m[3]);
     }
   }
 }

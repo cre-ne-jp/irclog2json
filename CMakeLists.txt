@@ -16,7 +16,9 @@ set(target irclog2json)
 add_executable(${target}
   irclog2json.cpp
   converter.cpp
-  message/factory.cpp
+  message/line_converter_base.cpp
+  message/tiarra_log_line_converter.cpp
+  message/madoka_log_line_converter.cpp
   message/message_base.cpp
   message/basic_message.cpp
   message/join.cpp

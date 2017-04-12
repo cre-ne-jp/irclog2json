@@ -1,6 +1,10 @@
 #include "options.h"
 #include "converter.h"
 
+#include "message/line_converter_base.h"
+#include "message/tiarra_log_line_converter.h"
+#include "message/madoka_log_line_converter.h"
+
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -87,7 +91,14 @@ int main(int argc, char* argv[]) {
     std::exit(1);
   }
 
-  irclog2json::Converter converter(ifs, channel, tm_date);
+  std::unique_ptr<irclog2json::message::LineConverterBase> line_converter(nullptr);
+  if (options.log_format == irclog2json::Options::LogFormat::Tiarra) {
+    line_converter = std::make_unique<irclog2json::message::TiarraLogLineConverter>(channel, tm_date);
+  } else if (options.log_format == irclog2json::Options::LogFormat::Madoka) {
+    line_converter = std::make_unique<irclog2json::message::MadokaLogLineConverter>(channel, tm_date);
+  }
+
+  irclog2json::Converter converter(ifs, *line_converter);
   picojson::value result = converter.Convert();
 
   ifs.close();
@@ -163,7 +174,7 @@ static bool ParseOptions(
 }
 
 static void PrintUsage(char* argv0, std::ostream& os) {
-  os << "Usage: " << argv0 << " -t [-p] LOG_FILE CHANNEL" << std::endl;
+  os << "Usage: " << argv0 << " (-t | -m) [-p] LOG_FILE CHANNEL" << std::endl;
   os << "  -t, --tiarra      specify that the log file is Tiarra format" << std::endl;
   os << "  -m, --madoka      specify that the log file is madoka format" << std::endl;
   os << "  -p, --pretty      output pretty-printed JSON" << std::endl;

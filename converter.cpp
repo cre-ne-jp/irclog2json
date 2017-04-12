@@ -1,6 +1,6 @@
 #include "converter.h"
 #include "message/message_base.h"
-#include "message/factory.h"
+#include "message/line_converter_base.h"
 
 #include <stdexcept>
 #include <string>
@@ -11,24 +11,20 @@
 #include <picojson.h>
 
 namespace irclog2json {
-  Converter::Converter(std::ifstream& f, std::string const& channel, struct tm const& tm_date) :
+  Converter::Converter(std::ifstream& f,
+                       message::LineConverterBase const& line_converter) :
     f_(f),
-    channel_(channel),
-    tm_date_(tm_date)
+    line_converter_(line_converter)
   {
   }
 
   picojson::value Converter::Convert() const {
-    message::Factory factory(channel_, tm_date_);
-
     picojson::array json_lines;
 
     std::string line;
-    while (!f_.eof() && !f_.fail()) {
-      std::getline(f_, line);
-
+    while (std::getline(f_, line)) {
       if (!line.empty()) {
-        std::unique_ptr<message::MessageBase> message = factory.ToMessage(line);
+        std::unique_ptr<message::MessageBase> message = line_converter_.ToMessage(line);
         if (message) {
           json_lines.emplace_back(message->ToJsonObject());
         } else {
