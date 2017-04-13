@@ -68,7 +68,7 @@ namespace irclog2json {
         std::string nick(m[4]);
         std::string new_nick(m[5]);
 
-        return std::make_unique<BasicMessage>("NOTICE", channel_, timestamp, nick, new_nick);
+        return std::make_unique<BasicMessage>("NICK", channel_, timestamp, nick, new_nick);
       }
 
       if (regex_match(line, m, ReJoin)) {
