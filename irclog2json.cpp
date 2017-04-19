@@ -4,6 +4,7 @@
 #include "message/line_converter_base.h"
 #include "message/tiarra_log_line_converter.h"
 #include "message/madoka_log_line_converter.h"
+#include "message/iso_2022_jp_line_converter.h"
 
 #include <string>
 #include <iostream>
@@ -15,6 +16,8 @@
 #include <clocale>
 #include <libgen.h>
 #include <getopt.h>
+
+#include <picojson.h>
 
 /**
  * @brief コマンドライン引数からオプションを解析する。
@@ -28,6 +31,20 @@
 static bool ParseOptions(
   int argc, char* argv[], irclog2json::Options& options, bool& print_usage
 );
+
+/**
+ * @brief ログをJSONオブジェクトの配列に変換する。
+ * @param ifs 入力ファイルストリーム。
+ * @param channel チャンネル名。
+ * @param tm_date 日付を表すtm構造体。
+ * @param options オプション設定。
+ * @return 変換結果。JSONオブジェクトの配列。
+ */
+static picojson::value ConvertLogToJsonObjects(std::ifstream& ifs,
+                                               std::string const& channel,
+                                               struct tm const& tm_date,
+                                               irclog2json::Options const& options);
+
 /**
  * @brief 使用法を表示する。
  * @param argv0 コマンドライン引数の最初に設定されるプログラム名。
@@ -91,15 +108,8 @@ int main(int argc, char* argv[]) {
     std::exit(1);
   }
 
-  std::unique_ptr<irclog2json::message::LineConverterBase> line_converter(nullptr);
-  if (options.log_format == irclog2json::Options::LogFormat::Tiarra) {
-    line_converter = std::make_unique<irclog2json::message::TiarraLogLineConverter>(channel, tm_date);
-  } else if (options.log_format == irclog2json::Options::LogFormat::Madoka) {
-    line_converter = std::make_unique<irclog2json::message::MadokaLogLineConverter>(channel, tm_date);
-  }
-
-  irclog2json::Converter converter(ifs, *line_converter);
-  picojson::value result = converter.Convert();
+  picojson::value result =
+    ConvertLogToJsonObjects(ifs, channel, tm_date, options);
 
   ifs.close();
 
@@ -126,11 +136,12 @@ static bool ParseOptions(
   constexpr struct option long_options[] = {
     {"tiarra", no_argument, nullptr, 't'},
     {"madoka", no_argument, nullptr, 'm'},
+    {"iso-2022-jp", no_argument, nullptr, 'j'},
     {"pretty", no_argument, nullptr, 'p'},
     {"help", no_argument, nullptr, 'h'},
     {0, 0, 0, 0}
   };
-  const char* optstring = "tmph";
+  const char* optstring = "tmjph";
 
   print_usage = false;
 
@@ -151,6 +162,10 @@ static bool ParseOptions(
     case 'm':
       // -m, --madoka
       options.log_format = irclog2json::Options::LogFormat::Madoka;
+      break;
+    case 'j':
+      // -j, --iso-2022-jp
+      options.iso_2022_jp = true;
       break;
     case 'p':
       // -p, --pretty
@@ -173,10 +188,38 @@ static bool ParseOptions(
   return no_invalid_option;
 }
 
+static picojson::value ConvertLogToJsonObjects(std::ifstream& ifs,
+                                               std::string const& channel,
+                                               struct tm const& tm_date,
+                                               irclog2json::Options const& options) {
+  std::unique_ptr<irclog2json::message::LineConverterBase> line_utf8_converter(nullptr);
+  if (options.log_format == irclog2json::Options::LogFormat::Tiarra) {
+    line_utf8_converter =
+      std::make_unique<irclog2json::message::TiarraLogLineConverter>(channel, tm_date);
+  } else if (options.log_format == irclog2json::Options::LogFormat::Madoka) {
+    line_utf8_converter =
+      std::make_unique<irclog2json::message::MadokaLogLineConverter>(channel, tm_date);
+  }
+
+  std::unique_ptr<irclog2json::message::LineConverterBase> line_converter(nullptr);
+  if (options.iso_2022_jp) {
+    line_converter =
+      std::make_unique<irclog2json::message::Iso2022JpLineConverter>(
+        channel, tm_date, *line_utf8_converter
+      );
+  } else {
+    line_converter = std::move(line_utf8_converter);
+  }
+
+  irclog2json::Converter converter(ifs, *line_converter);
+  return converter.Convert();
+}
+
 static void PrintUsage(char* argv0, std::ostream& os) {
-  os << "Usage: " << argv0 << " (-t | -m) [-p] LOG_FILE CHANNEL" << std::endl;
-  os << "  -t, --tiarra      specify that the log file is Tiarra format" << std::endl;
-  os << "  -m, --madoka      specify that the log file is madoka format" << std::endl;
-  os << "  -p, --pretty      output pretty-printed JSON" << std::endl;
-  os << "  -h, --help        display this help and exit" << std::endl;
+  os << "Usage: " << argv0 << " (-t | -m) [-j] [-p] LOG_FILE CHANNEL" << std::endl;
+  os << "  -t, --tiarra          specify that the log file is Tiarra format" << std::endl;
+  os << "  -m, --madoka          specify that the log file is madoka format" << std::endl;
+  os << "  -j, --iso-2022-jp     specify that the charset is ISO-2022-JP" << std::endl;
+  os << "  -p, --pretty          output pretty-printed JSON" << std::endl;
+  os << "  -h, --help            display this help and exit" << std::endl;
 }

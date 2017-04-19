@@ -28,8 +28,11 @@ add_executable(${target}
   message/line_converter_base.cpp
   message/tiarra_log_line_converter.cpp
   message/madoka_log_line_converter.cpp
+  message/iso_2022_jp_line_converter.cpp
   message/message_base.cpp
   message/basic_message.cpp
   message/join.cpp
   message/kick.cpp
 )
+
+target_link_libraries(${target} icuuc icudata)
