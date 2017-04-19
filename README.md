@@ -14,7 +14,7 @@ git submodule update --init
 
 # ビルド
 mkdir build && cd build
-cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake ..
 make
 
 # 並列でコンパイルする場合
