@@ -131,7 +131,7 @@ namespace {
 
     for (auto i : plain_code_indices) {
       if (u32s[i] == U'\u001A') {
-        u32s[i] = U'\u0001';
+        u32s[i] = U'\u000F';
       }
     }
 
