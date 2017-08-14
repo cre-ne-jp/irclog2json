@@ -10,6 +10,7 @@
 #include <string>
 #include <regex>
 #include <memory>
+#include "../make_unique.h"
 #include <ctime>
 
 #define TIARRA_CHANNEL_PATTERN CHANNEL_PATTERN R"(@[^\s]+)"
