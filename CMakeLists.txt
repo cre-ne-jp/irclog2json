@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 2.8.12)
 
 set(CMAKE_VERBOSE_MAKEFILE 0)
 
@@ -14,12 +14,12 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif(NOT CMAKE_BUILD_TYPE)
 
-
-find_package(ICU)
-include_directories(${ICU_INCLUDE_DIRS})
-link_directories(${ICU_LIBRARIES})
-
 include_directories(vendor/picojson)
+
+find_package(PkgConfig)
+pkg_check_modules(ICU REQUIRED icu-uc)
+include_directories(${ICU_INCLUDE_DIRS})
+link_directories(${ICU_LIBRARY_DIRS})
 
 set(target irclog2json)
 add_executable(${target}
@@ -35,4 +35,5 @@ add_executable(${target}
   message/kick.cpp
 )
 
-target_link_libraries(${target} icuuc icudata)
+target_compile_options(${target} PUBLIC ${ICU_CFLAGS} ${ICU_LDFLAGS})
+target_link_libraries(${target} ${ICU_LIBRARIES})
