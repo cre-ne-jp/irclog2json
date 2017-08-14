@@ -35,5 +35,4 @@ add_executable(${target}
   message/kick.cpp
 )
 
-target_compile_options(${target} PUBLIC ${ICU_CFLAGS} ${ICU_LDFLAGS})
 target_link_libraries(${target} ${ICU_LIBRARIES})
