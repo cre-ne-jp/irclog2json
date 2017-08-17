@@ -13,8 +13,6 @@
 #include "../make_unique.h"
 #include <ctime>
 
-#define TIARRA_CHANNEL_PATTERN CHANNEL_PATTERN R"(@\w+)"
-
 #define PRIVMSG_PATTERN R"((\d{2}):(\d{2}):(\d{2}) (?:>(?:)" CHANNEL_PATTERN ":)?(" TARGET_PATTERN ")<|<(?:" CHANNEL_PATTERN ":)?(" TARGET_PATTERN ")>) (.+)"
 #define NOTICE_PATTERN R"((\d{2}):(\d{2}):(\d{2}) (?:\)(?:)" CHANNEL_PATTERN ":)?(" TARGET_PATTERN R"()\(|\((?:)" CHANNEL_PATTERN ":)?(" TARGET_PATTERN R"()\)) (.+))"
 #define NICK_MESSAGE_PATTERN_1 R"((\d{2}):(\d{2}):(\d{2}) ()" NICK_PATTERN ") -> (" NICK_PATTERN ")"
@@ -23,10 +21,10 @@
 // 01:07:41 + licorice_(~licorice@home.cokage.ne.jp) to #もの書き
 #define JOIN_PATTERN R"((\d{2}):(\d{2}):(\d{2}) \+ [+@]?()" NICK_PATTERN R"()\([-+~]?()" USER_PATTERN ")@(" HOST_PATTERN R"()\) to )" CHANNEL_PATTERN
 
-#define PART_PATTERN R"((\d{2}):(\d{2}):(\d{2}) - ()" NICK_PATTERN ") from " TIARRA_CHANNEL_PATTERN R"((?: \((.*)\))?)"
+#define PART_PATTERN R"((\d{2}):(\d{2}):(\d{2}) - ()" NICK_PATTERN ") from " CHANNEL_PATTERN R"((?: \((.*)\))?)"
 #define QUIT_PATTERN R"((\d{2}):(\d{2}):(\d{2}) ! ()" NICK_PATTERN R"raw() \((.*)\))raw"
-#define KICK_PATTERN R"((\d{2}):(\d{2}):(\d{2}) - ()" NICK_PATTERN ") by (" TARGET_PATTERN ") from " TIARRA_CHANNEL_PATTERN R"((?: \((.*)\))?)"
-#define TOPIC_PATTERN R"((\d{2}):(\d{2}):(\d{2}) Topic of channel )" TIARRA_CHANNEL_PATTERN " by (" TARGET_PATTERN "): (.*)"
+#define KICK_PATTERN R"((\d{2}):(\d{2}):(\d{2}) - ()" NICK_PATTERN ") by (" TARGET_PATTERN ") from " CHANNEL_PATTERN R"((?: \((.*)\))?)"
+#define TOPIC_PATTERN R"((\d{2}):(\d{2}):(\d{2}) Topic of channel )" CHANNEL_PATTERN " by (" TARGET_PATTERN "): (.*)"
 
 namespace {
   const std::regex RePrivmsg(PRIVMSG_PATTERN);
