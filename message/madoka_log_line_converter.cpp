@@ -10,7 +10,6 @@
 #include <string>
 #include <regex>
 #include <memory>
-#include "../make_unique.h"
 #include <ctime>
 
 #define PRIVMSG_PATTERN R"((\d{2}):(\d{2}):(\d{2}) (?:>(?:)" CHANNEL_PATTERN ":)?(" TARGET_PATTERN ")<|<(?:" CHANNEL_PATTERN ":)?(" TARGET_PATTERN ")>) (.+)"

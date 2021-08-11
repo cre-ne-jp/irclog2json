@@ -7,7 +7,6 @@
 #include "message/iso_2022_jp_line_converter.h"
 
 #include <memory>
-#include "make_unique.h"
 
 #include <string>
 #include <iostream>
