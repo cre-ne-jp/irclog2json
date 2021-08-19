@@ -9,12 +9,12 @@ namespace irclog2json {
     class MessageBase {
     public:
       MessageBase(const char* type, std::string const& channel, struct tm const& timestamp, std::string const& nick);
-      ~MessageBase() = default;
+      virtual ~MessageBase() = default;
 
       MessageBase(MessageBase const&) = default;
       MessageBase(MessageBase&&) = default;
-      MessageBase& operator =(MessageBase const&) = default;
-      MessageBase& operator =(MessageBase &&) = default;
+      MessageBase& operator =(MessageBase const&) = delete;
+      MessageBase& operator =(MessageBase &&) = delete;
 
       picojson::object ToJsonObject() const {
         return DoToJsonObject();

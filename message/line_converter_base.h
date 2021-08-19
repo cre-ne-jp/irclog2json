@@ -15,12 +15,12 @@ namespace irclog2json {
 
       LineConverterBase(std::string const& channel, struct tm const& tm_date);
 
-      virtual ~LineConverterBase();
+      virtual ~LineConverterBase() = default;
 
       LineConverterBase(LineConverterBase const&) = default;
       LineConverterBase(LineConverterBase&&) = default;
-      LineConverterBase& operator =(LineConverterBase const&) = default;
-      LineConverterBase& operator =(LineConverterBase&&) = default;
+      LineConverterBase& operator =(LineConverterBase const&) = delete;
+      LineConverterBase& operator =(LineConverterBase&&) = delete;
 
       std::unique_ptr<MessageBase> ToMessage(std::string const& line) const;
 
