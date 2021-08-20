@@ -38,3 +38,8 @@ add_executable(${target}
 )
 
 target_link_libraries(${target} ${ICU_LIBRARIES})
+
+if(BUILD_TESTS)
+  enable_testing()
+  add_subdirectory(tests)
+endif(BUILD_TESTS)

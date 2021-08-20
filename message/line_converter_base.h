@@ -15,7 +15,7 @@ namespace irclog2json {
 
       LineConverterBase(std::string const& channel, struct tm const& tm_date);
 
-      virtual ~LineConverterBase() = default;
+      virtual ~LineConverterBase();
 
       LineConverterBase(LineConverterBase const&) = default;
       LineConverterBase(LineConverterBase&&) = default;

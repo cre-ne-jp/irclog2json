@@ -13,6 +13,8 @@ namespace irclog2json {
     {
     }
 
+    MessageBase::~MessageBase() = default;
+
     picojson::object MessageBase::DoToJsonObject() const {
       picojson::object m;
 

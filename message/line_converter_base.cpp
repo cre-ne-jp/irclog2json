@@ -19,6 +19,8 @@ namespace irclog2json {
     {
     }
 
+    LineConverterBase::~LineConverterBase() = default;
+
     std::unique_ptr<MessageBase> LineConverterBase::ToMessage(std::string const& line) const {
       return DoToMessage(line);
     }

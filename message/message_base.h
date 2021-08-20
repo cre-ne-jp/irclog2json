@@ -9,7 +9,7 @@ namespace irclog2json {
     class MessageBase {
     public:
       MessageBase(const char* type, std::string const& channel, struct tm const& timestamp, std::string const& nick);
-      virtual ~MessageBase() = default;
+      virtual ~MessageBase();
 
       MessageBase(MessageBase const&) = default;
       MessageBase(MessageBase&&) = default;

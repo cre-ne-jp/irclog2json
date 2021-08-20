@@ -1,0 +1,6 @@
+-std=gnu++17
+-I..
+-I../vendor/picojson
+-I../vendor/doctest
+-Wall
+-DPICOJSON_USE_INT64
