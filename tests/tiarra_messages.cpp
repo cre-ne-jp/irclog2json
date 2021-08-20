@@ -38,7 +38,7 @@ TEST_CASE("Tiarra PRIVMSG") {
   }
 
   SUBCASE("nick") {
-    CHECK_OBJ_STR_EQ(o, "nick", "Toybox");
+    CHECK_OBJ_STR_EQ(o, "nick", "Toybox1");
   }
 
   SUBCASE("message") {
