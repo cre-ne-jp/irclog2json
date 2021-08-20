@@ -23,9 +23,9 @@ pkg_check_modules(ICU REQUIRED icu-uc)
 include_directories(${ICU_INCLUDE_DIRS})
 link_directories(${ICU_LIBRARY_DIRS})
 
-set(target irclog2json)
-add_executable(${target}
-  irclog2json.cpp
+set(target_common_lib irclog2json-common)
+add_library(${target_common_lib}
+  STATIC
   converter.cpp
   message/line_converter_base.cpp
   message/tiarra_log_line_converter.cpp
@@ -37,7 +37,15 @@ add_executable(${target}
   message/kick.cpp
 )
 
-target_link_libraries(${target} ${ICU_LIBRARIES})
+set(target irclog2json)
+add_executable(${target}
+  irclog2json.cpp
+)
+
+target_link_libraries(${target}
+  ${target_common_lib}
+  ${ICU_LIBRARIES}
+)
 
 if(BUILD_TESTS)
   enable_testing()

@@ -9,7 +9,7 @@
 #include "message/message_base.h"
 #include "message/tiarra_log_line_converter.h"
 
-#include "test_helper.h"
+#include "tests/test_helper.h"
 
 TEST_CASE("Tiarra PRIVMSG") {
   using irclog2json::message::TiarraLogLineConverter;
