@@ -6,6 +6,14 @@ add_executable(${test_target}
   irclog2json_test.cpp
 
   tiarra/privmsg.cpp
+  tiarra/notice.cpp
+  tiarra/topic.cpp
+  tiarra/mode.cpp
+  tiarra/nick.cpp
+  tiarra/part.cpp
+  tiarra/quit.cpp
+  tiarra/kick.cpp
+  tiarra/join.cpp
 )
 target_link_libraries(${test_target}
   ${target_common_lib}
