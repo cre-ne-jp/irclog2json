@@ -33,4 +33,4 @@ jobs:
       - name: Test
         working-directory: build
         run: |
-          make test
+          ctest --output-on-failure
