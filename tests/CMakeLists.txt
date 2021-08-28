@@ -8,12 +8,25 @@ add_executable(${test_target}
   tiarra/privmsg.cpp
   tiarra/notice.cpp
   tiarra/topic.cpp
-  tiarra/mode.cpp
   tiarra/nick.cpp
   tiarra/part.cpp
   tiarra/quit.cpp
   tiarra/kick.cpp
   tiarra/join.cpp
+
+  tiarra/mode.cpp
+
+  madoka/privmsg.cpp
+  madoka/notice.cpp
+  madoka/topic.cpp
+  madoka/nick.cpp
+  madoka/part.cpp
+  madoka/quit.cpp
+  madoka/kick.cpp
+  madoka/join.cpp
+
+  madoka/mode.cpp
+  madoka/time_tone.cpp
 )
 target_link_libraries(${test_target}
   ${target_common_lib}
