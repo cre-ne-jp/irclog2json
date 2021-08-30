@@ -15,13 +15,13 @@
 #define PRIVMSG_PATTERN R"((\d{2}):(\d{2}):(\d{2}) (?:>(?:)" CHANNEL_PATTERN ":)?(" TARGET_PATTERN ")<|<(?:" CHANNEL_PATTERN ":)?(" TARGET_PATTERN ")>) (.+)"
 #define NOTICE_PATTERN R"((\d{2}):(\d{2}):(\d{2}) (?:\)(?:)" CHANNEL_PATTERN ":)?(" TARGET_PATTERN R"()\(|\((?:)" CHANNEL_PATTERN ":)?(" TARGET_PATTERN R"()\)) (.+))"
 #define NICK_MESSAGE_PATTERN_1 R"((\d{2}):(\d{2}):(\d{2}) ()" NICK_PATTERN ") -> (" NICK_PATTERN ")"
-#define NICK_MESSAGE_PATTERN_2 R"((\d{2}):(\d{2}):(\d{2}) My nick is changed \(()" NICK_PATTERN ") [-=]> (" NICK_PATTERN R"()\))"
+#define NICK_MESSAGE_PATTERN_2 R"((\d{2}):(\d{2}):(\d{2}) \[!\] nick changed \(()" NICK_PATTERN ") -> (" NICK_PATTERN R"()\))"
 
-// 01:07:41 + licorice_(~licorice@home.cokage.ne.jp) to #$B$b$N=q$-(B
-#define JOIN_PATTERN R"((\d{2}):(\d{2}):(\d{2}) \+ [+@]?()" NICK_PATTERN R"()\([-+~]?()" USER_PATTERN ")@(" HOST_PATTERN R"()\) to )" CHANNEL_PATTERN
+// 01:07:41 + licorice_(~licorice@home.cokage.ne.jp) to #もの書き
+#define JOIN_PATTERN R"((\d{2}):(\d{2}):(\d{2}) \+ [+@]?()" NICK_PATTERN R"()\([-+~]?()" USER_PATTERN ")@(" HOST_PATTERN R"()\) to )" CHANNEL_PATTERN R"((?: with \+[a-z]+)?)"
 
 #define PART_PATTERN R"((\d{2}):(\d{2}):(\d{2}) - ()" NICK_PATTERN ") from " CHANNEL_PATTERN R"((?: \((.*)\))?)"
-#define QUIT_PATTERN R"((\d{2}):(\d{2}):(\d{2}) ! ()" NICK_PATTERN R"raw() \((.*)\))raw"
+#define QUIT_PATTERN R"((\d{2}):(\d{2}):(\d{2}) ! ()" NICK_PATTERN R"raw()(?: \((.*)\))?)raw"
 #define KICK_PATTERN R"((\d{2}):(\d{2}):(\d{2}) - ()" NICK_PATTERN ") by (" TARGET_PATTERN ") from " CHANNEL_PATTERN R"((?: \((.*)\))?)"
 #define TOPIC_PATTERN R"((\d{2}):(\d{2}):(\d{2}) Topic of channel )" CHANNEL_PATTERN " by (" TARGET_PATTERN "): (.*)"
 
@@ -96,7 +96,7 @@ namespace irclog2json {
 
         std::string nick(m[4]);
         std::string message(
-          RemoveControlCodes(m[5].length() > 0 ? m[5].str() : m[6].str())
+          RemoveControlCodes(m[5].length() > 0 ? m[5].str() : "")
         );
 
         return std::make_unique<BasicMessage>("QUIT", channel_, timestamp, nick, message);
