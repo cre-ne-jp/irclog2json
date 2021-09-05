@@ -47,6 +47,10 @@ enum class Iso2022JpCharset {
   JisX0208
 };
 
+constexpr char CC_ESC = '\x1B';
+constexpr char CC_SUB = '\x1A';
+constexpr char CC_EM = '\x19';
+
 std::string EscapeMIrcPlain(std::string const& s,
                             std::vector<size_t>& plain_code_indices) {
   std::string result = s;
@@ -55,58 +59,83 @@ std::string EscapeMIrcPlain(std::string const& s,
 
   size_t count = -1;
   for (auto it = result.begin(); it != it_end; ++it) {
-    bool change_state = false;
+    bool change_charset = false;
     char c = *it;
 
     if (charset == Iso2022JpCharset::JisX0208) {
-      if (c == 0x1B) {
+      if (c == CC_ESC) { // 0x1B
         auto it_1 = it + 1;
-        if (it_1 != it_end && *it_1 == 0x28) {
+        if (it_1 != it_end && *it_1 == '(') { // 0x28
           auto it_2 = it_1 + 1;
-          if (it_2 != it_end && *it_2 == 0x42) {
-            change_state = true;
+          if (it_2 != it_end && *it_2 == 'B') { // 0x42
+            change_charset = true;
             charset = Iso2022JpCharset::Ascii;
             it = it_2;
           }
         }
       }
 
-      if (!change_state) {
-        if (c == 0x0F) {
+      if (!change_charset) {
+        switch (c) {
+        case '\x0E':
+          ++count;
+
+          // ^Y に置換する
+          *it = CC_EM;
+          plain_code_indices.push_back(count);
+
+          break;
+        case '\x0F':
           ++count;
 
           // ^Z に置換する
-          *it = 0x1A;
+          *it = CC_SUB;
           plain_code_indices.push_back(count);
-        } else {
+
+          break;
+        default: {
           // 2バイトで1文字と数える
           auto it_1 = it + 1;
           if (it_1 != it_end) {
             ++count;
             it = it_1;
           }
+
+          break;
+        }
         }
       }
     } else {
-      if (c == 0x1B) {
+      if (c == CC_ESC) { // 0x1B
         auto it_1 = it + 1;
-        if (it_1 != it_end && *it_1 == 0x24) {
+        if (it_1 != it_end && *it_1 == '$') { // 0x24
           auto it_2 = it_1 + 1;
-          if (it_2 != it_end && *it_2 == 0x42) {
-            change_state = true;
+          if (it_2 != it_end && *it_2 == 'B') { // 0x42
+            change_charset = true;
             charset = Iso2022JpCharset::JisX0208;
             it = it_2;
           }
         }
       }
 
-      if (!change_state) {
+      if (!change_charset) {
         ++count;
 
-        if (c == 0x0F) {
-          // ^Z に置換する
-          *it = 0x1A;
+        switch (c) {
+        case '\x0E':
+          // ^Y に置換する
+          *it = CC_EM;
           plain_code_indices.push_back(count);
+
+          break;
+        case '\x0F':
+          // ^Z に置換する
+          *it = CC_SUB;
+          plain_code_indices.push_back(count);
+
+          break;
+        default:
+          break;
         }
       }
     }
@@ -118,8 +147,15 @@ std::string EscapeMIrcPlain(std::string const& s,
 void UnescapeMIrcPlain(icu::UnicodeString& s,
                        const std::vector<size_t>& plain_code_indices) {
   for (auto i : plain_code_indices) {
-    if (s[i] == u'\u001A') {
+    switch (s[i]) {
+    case static_cast<char16_t>(CC_EM):
+      s.replace(i, 1, u'\u000E');
+      break;
+    case static_cast<char16_t>(CC_SUB):
       s.replace(i, 1, u'\u000F');
+      break;
+    default:
+      break;
     }
   }
 }

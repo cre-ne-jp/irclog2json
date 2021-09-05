@@ -125,3 +125,30 @@ TEST_CASE("Madoka ISO-2022-JP TOPIC 最後にASCII選択なし") {
     CHECK_UNARY_FALSE(o.at("iso2022JpCharsetFixed").get<bool>());
   }
 }
+
+TEST_CASE("Madoka ISO-2022-JP TOPIC containing mIRC codes") {
+  using irclog2json::message::MadokaIso2022JpLineConverter;
+  using irclog2json::message::MadokaLineConverter;
+
+  struct tm tm_date {};
+
+  strptime("1999-02-21", "%F", &tm_date);
+
+  const std::string channel{"kataribe"};
+  auto converter_madoka =
+      std::make_unique<MadokaLineConverter>(channel, tm_date);
+  MadokaIso2022JpLineConverter converter{std::move(converter_madoka)};
+
+  const auto m = converter.ToMessage(
+      "00:38:04 Topic of channel #kataribe by sf: "
+      "\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0B\x0C\x0E\x0F"
+      "\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1C\x1D\x1E\x1F"
+      "visible characters");
+
+  REQUIRE(m);
+
+  const auto o = m->ToJsonObject();
+
+  CHECK_OBJ_STR_EQ(o, "message",
+                   "\x02\x03\x04\x0F\x11\x16\x1D\x1E\x1Fvisible characters");
+}
