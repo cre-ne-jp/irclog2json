@@ -1,30 +1,30 @@
 #pragma once
 
-#include <string>
 #include <fstream>
-#include <ctime>
+#include <memory>
+
 #include <picojson.h>
 
+#include "message/line_converter.h"
+
 namespace irclog2json {
-  namespace message {
-    class LineConverterBase;
-  }
 
-  class Converter {
-  public:
-    Converter(std::ifstream& f,
-              message::LineConverterBase const& line_converter);
-    ~Converter() = default;
+class Converter {
+public:
+  Converter(std::ifstream* f,
+            std::unique_ptr<message::LineConverter>&& line_converter);
+  ~Converter();
 
-    Converter(Converter const&) = delete;
-    Converter(Converter&&) = delete;
-    Converter& operator =(Converter const&) = delete;
-    Converter& operator =(Converter&&) = delete;
+  Converter(Converter const&) = delete;
+  Converter(Converter&&) = delete;
+  Converter& operator=(Converter const&) = delete;
+  Converter& operator=(Converter&&) = delete;
 
-    picojson::value Convert() const;
+  picojson::value Convert() const;
 
-  private:
-    std::ifstream& f_;
-    message::LineConverterBase const& line_converter_;
-  };
-}
+private:
+  std::ifstream* const f_;
+  std::unique_ptr<message::LineConverter> line_converter_;
+};
+
+} // namespace irclog2json

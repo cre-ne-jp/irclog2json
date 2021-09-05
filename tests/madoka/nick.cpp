@@ -12,13 +12,13 @@
 #include "tests/test_helper.h"
 
 TEST_CASE("Madoka NICK from user") {
-  using irclog2json::message::MadokaLogLineConverter;
+  using irclog2json::message::MadokaLineConverter;
 
   struct tm tm_date{};
 
   strptime("2021-04-01", "%F", &tm_date);
 
-  MadokaLogLineConverter converter{"cre", tm_date};
+  MadokaLineConverter converter{"cre", tm_date};
   const auto m = converter.ToMessage("12:34:56 ocha -> ocha[away]");
 
   REQUIRE(m);
@@ -47,13 +47,13 @@ TEST_CASE("Madoka NICK from user") {
 }
 
 TEST_CASE("Madoka NICK from self") {
-  using irclog2json::message::MadokaLogLineConverter;
+  using irclog2json::message::MadokaLineConverter;
 
   struct tm tm_date{};
 
   strptime("2021-04-01", "%F", &tm_date);
 
-  MadokaLogLineConverter converter{"cre", tm_date};
+  MadokaLineConverter converter{"cre", tm_date};
   const auto m = converter.ToMessage("14:12:46 [!] nick changed (dice2 -> dice)");
 
   REQUIRE(m);

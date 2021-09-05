@@ -12,13 +12,13 @@
 #include "tests/test_helper.h"
 
 TEST_CASE("Tiarra KICK without message") {
-  using irclog2json::message::TiarraLogLineConverter;
+  using irclog2json::message::TiarraLineConverter;
 
   struct tm tm_date{};
 
   strptime("2021-04-01", "%F", &tm_date);
 
-  TiarraLogLineConverter converter{"もの書き", tm_date};
+  TiarraLineConverter converter{"もの書き", tm_date};
   const auto m = converter.ToMessage("08:54:52 - ocha by Toybox from #もの書き@cre");
 
   REQUIRE(m);
@@ -51,13 +51,13 @@ TEST_CASE("Tiarra KICK without message") {
 }
 
 TEST_CASE("Tiarra KICK with message") {
-  using irclog2json::message::TiarraLogLineConverter;
+  using irclog2json::message::TiarraLineConverter;
 
   struct tm tm_date{};
 
   strptime("2021-04-01", "%F", &tm_date);
 
-  TiarraLogLineConverter converter{"もの書き", tm_date};
+  TiarraLineConverter converter{"もの書き", tm_date};
   const auto m = converter.ToMessage("08:54:52 - ocha by Toybox from #もの書き@cre (ごめんね。)");
 
   REQUIRE(m);

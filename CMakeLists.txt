@@ -26,15 +26,24 @@ link_directories(${ICU_LIBRARY_DIRS})
 set(target_common_lib irclog2json-common)
 add_library(${target_common_lib}
   STATIC
-  converter.cpp
-  message/line_converter_base.cpp
-  message/tiarra_log_line_converter.cpp
-  message/madoka_log_line_converter.cpp
+
+  message/utf8_line_converter.cpp
   message/iso_2022_jp_line_converter.cpp
+
+  message/tiarra_log_line_converter.cpp
+  message/tiarra_iso_2022_jp_line_converter.cpp
+  message/tiarra_re.cpp
+
+  message/madoka_log_line_converter.cpp
+  message/madoka_iso_2022_jp_line_converter.cpp
+  message/madoka_re.cpp
+
   message/message_base.cpp
   message/basic_message.cpp
   message/join.cpp
   message/kick.cpp
+
+  converter.cpp
 )
 
 set(target irclog2json)

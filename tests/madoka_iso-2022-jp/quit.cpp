@@ -7,22 +7,24 @@
 #include <picojson.h>
 
 #include "message/message_base.h"
+
+#include "message/madoka_iso_2022_jp_line_converter.h"
 #include "message/madoka_log_line_converter.h"
-#include "message/iso_2022_jp_line_converter.h"
 
 #include "tests/test_helper.h"
 
 TEST_CASE("Madoka ISO-2022-JP QUIT with message") {
-  using irclog2json::message::MadokaLogLineConverter;
-  using irclog2json::message::Iso2022JpLineConverter;
+  using irclog2json::message::MadokaIso2022JpLineConverter;
+  using irclog2json::message::MadokaLineConverter;
 
-  struct tm tm_date{};
+  struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
   const std::string channel{"cre"};
-  MadokaLogLineConverter converter_madoka{channel, tm_date};
-  Iso2022JpLineConverter converter{channel, tm_date, converter_madoka};
+  auto converter_madoka =
+      std::make_unique<MadokaLineConverter>(channel, tm_date);
+  MadokaIso2022JpLineConverter converter{std::move(converter_madoka)};
 
   /*
    * "19:04:12 ! ocha (\"さようなら\")"
@@ -32,10 +34,9 @@ TEST_CASE("Madoka ISO-2022-JP QUIT with message") {
    * 00000020: 2842 2229 0a                             (B").
    */
   const auto m = converter.ToMessage(
-    R"(19:04:12 ! ocha (")"
-    "\x1B\x24\x42\x24\x35\x24\x68\x24\x26\x24\x4A\x24\x69\x1B\x28\x42"
-    R"raw("))raw"
-  );
+      R"(19:04:12 ! ocha (")"
+      "\x1B\x24\x42\x24\x35\x24\x68\x24\x26\x24\x4A\x24\x69\x1B\x28\x42"
+      R"raw("))raw");
 
   REQUIRE(m);
 
@@ -63,16 +64,17 @@ TEST_CASE("Madoka ISO-2022-JP QUIT with message") {
 }
 
 TEST_CASE("Madoka ISO-2022-JP QUIT with message 最後にASCII選択なし") {
-  using irclog2json::message::MadokaLogLineConverter;
-  using irclog2json::message::Iso2022JpLineConverter;
+  using irclog2json::message::MadokaIso2022JpLineConverter;
+  using irclog2json::message::MadokaLineConverter;
 
-  struct tm tm_date{};
+  struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
   const std::string channel{"cre"};
-  MadokaLogLineConverter converter_madoka{channel, tm_date};
-  Iso2022JpLineConverter converter{channel, tm_date, converter_madoka};
+  auto converter_madoka =
+      std::make_unique<MadokaLineConverter>(channel, tm_date);
+  MadokaIso2022JpLineConverter converter{std::move(converter_madoka)};
 
   /*
    * "19:04:12 ! ocha (\"さようなら\")"
@@ -81,11 +83,10 @@ TEST_CASE("Madoka ISO-2022-JP QUIT with message 最後にASCII選択なし") {
    * 00000010: 2822 1b24 4224 3524 6824 2624 4a24 691b  (".$B$5$h$&$J$i.
    * 00000020: 2842 2229 0a                             (B").
    */
-  const auto m = converter.ToMessage(
-    R"(19:04:12 ! ocha (")"
-    "\x1B\x24\x42\x24\x35\x24\x68\x24\x26\x24\x4A\x24\x69"
-    R"raw("))raw"
-  );
+  const auto m =
+      converter.ToMessage(R"(19:04:12 ! ocha (")"
+                          "\x1B\x24\x42\x24\x35\x24\x68\x24\x26\x24\x4A\x24\x69"
+                          R"raw("))raw");
 
   REQUIRE(m);
 

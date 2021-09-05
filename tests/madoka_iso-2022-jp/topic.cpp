@@ -7,22 +7,24 @@
 #include <picojson.h>
 
 #include "message/message_base.h"
+
+#include "message/madoka_iso_2022_jp_line_converter.h"
 #include "message/madoka_log_line_converter.h"
-#include "message/iso_2022_jp_line_converter.h"
 
 #include "tests/test_helper.h"
 
 TEST_CASE("Madoka ISO-2022-JP TOPIC") {
-  using irclog2json::message::MadokaLogLineConverter;
-  using irclog2json::message::Iso2022JpLineConverter;
+  using irclog2json::message::MadokaIso2022JpLineConverter;
+  using irclog2json::message::MadokaLineConverter;
 
-  struct tm tm_date{};
+  struct tm tm_date {};
 
   strptime("1999-02-21", "%F", &tm_date);
 
   const std::string channel{"kataribe"};
-  MadokaLogLineConverter converter_madoka{channel, tm_date};
-  Iso2022JpLineConverter converter{channel, tm_date, converter_madoka};
+  auto converter_madoka =
+      std::make_unique<MadokaLineConverter>(channel, tm_date);
+  MadokaIso2022JpLineConverter converter{std::move(converter_madoka)};
 
   /* "00:38:04 Topic of channel #kataribe by sf: 創作TRPG語り部関係雑談"
    * xxdの出力（最後は LF = 0x0A）:
@@ -32,12 +34,12 @@ TEST_CASE("Madoka ISO-2022-JP TOPIC") {
    * 00000030: 3a6e 1b28 4254 5250 471b 2442 386c 246a  :n.(BTRPG.$B8l$j
    * 00000040: 4974 3458 3738 3b28 434c 1b28 420a       It4X78;(CL.(B.
    */
-  const auto m = converter.ToMessage(
-    "00:38:04 Topic of channel #kataribe by sf: "
-    "\x1B\x24\x42\x41\x4F\x3A\x6E\x1B\x28\x42"
-    "TRPG"
-    "\x1B\x24\x42\x38\x6C\x24\x6A\x49\x74\x34\x58\x37\x38\x3B\x28\x43\x4C\x1B\x28\x42"
-  );
+  const auto m =
+      converter.ToMessage("00:38:04 Topic of channel #kataribe by sf: "
+                          "\x1B\x24\x42\x41\x4F\x3A\x6E\x1B\x28\x42"
+                          "TRPG"
+                          "\x1B\x24\x42\x38\x6C\x24\x6A\x49\x74\x34\x58\x37\x38"
+                          "\x3B\x28\x43\x4C\x1B\x28\x42");
 
   REQUIRE(m);
 
@@ -65,16 +67,17 @@ TEST_CASE("Madoka ISO-2022-JP TOPIC") {
 }
 
 TEST_CASE("Madoka ISO-2022-JP TOPIC 最後にASCII選択なし") {
-  using irclog2json::message::MadokaLogLineConverter;
-  using irclog2json::message::Iso2022JpLineConverter;
+  using irclog2json::message::MadokaIso2022JpLineConverter;
+  using irclog2json::message::MadokaLineConverter;
 
-  struct tm tm_date{};
+  struct tm tm_date {};
 
   strptime("1999-02-21", "%F", &tm_date);
 
   const std::string channel{"kataribe"};
-  MadokaLogLineConverter converter_madoka{channel, tm_date};
-  Iso2022JpLineConverter converter{channel, tm_date, converter_madoka};
+  auto converter_madoka =
+      std::make_unique<MadokaLineConverter>(channel, tm_date);
+  MadokaIso2022JpLineConverter converter{std::move(converter_madoka)};
 
   /* "00:38:04 Topic of channel #kataribe by sf: 創作TRPG語り部関係雑談"
    * xxdの出力（最後は LF = 0x0A）:
@@ -85,11 +88,10 @@ TEST_CASE("Madoka ISO-2022-JP TOPIC 最後にASCII選択なし") {
    * 00000040: 4974 3458 3738 3b28 434c 1b28 420a       It4X78;(CL.(B.
    */
   const auto m = converter.ToMessage(
-    "00:38:04 Topic of channel #kataribe by sf: "
-    "\x1B\x24\x42\x41\x4F\x3A\x6E\x1B\x28\x42"
-    "TRPG"
-    "\x1B\x24\x42\x38\x6C\x24\x6A\x49\x74\x34\x58\x37\x38\x3B\x28\x43\x4C"
-  );
+      "00:38:04 Topic of channel #kataribe by sf: "
+      "\x1B\x24\x42\x41\x4F\x3A\x6E\x1B\x28\x42"
+      "TRPG"
+      "\x1B\x24\x42\x38\x6C\x24\x6A\x49\x74\x34\x58\x37\x38\x3B\x28\x43\x4C");
 
   REQUIRE(m);
 

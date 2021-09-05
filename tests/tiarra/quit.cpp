@@ -12,13 +12,13 @@
 #include "tests/test_helper.h"
 
 TEST_CASE("Tiarra QUIT without message") {
-  using irclog2json::message::TiarraLogLineConverter;
+  using irclog2json::message::TiarraLineConverter;
 
   struct tm tm_date{};
 
   strptime("2021-04-01", "%F", &tm_date);
 
-  TiarraLogLineConverter converter{"もの書き", tm_date};
+  TiarraLineConverter converter{"もの書き", tm_date};
   const auto m = converter.ToMessage("07:23:28 ! ocha ()");
 
   REQUIRE(m);
@@ -47,13 +47,13 @@ TEST_CASE("Tiarra QUIT without message") {
 }
 
 TEST_CASE("Tiarra QUIT with message") {
-  using irclog2json::message::TiarraLogLineConverter;
+  using irclog2json::message::TiarraLineConverter;
 
   struct tm tm_date{};
 
   strptime("2021-04-01", "%F", &tm_date);
 
-  TiarraLogLineConverter converter{"もの書き", tm_date};
+  TiarraLineConverter converter{"もの書き", tm_date};
   const auto m = converter.ToMessage("19:04:12 ! ocha (Quit: さようなら)");
 
   REQUIRE(m);

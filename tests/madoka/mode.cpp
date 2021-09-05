@@ -12,13 +12,13 @@
 #include "tests/test_helper.h"
 
 TEST_CASE("Madoka MODE") {
-  using irclog2json::message::MadokaLogLineConverter;
+  using irclog2json::message::MadokaLineConverter;
 
   struct tm tm_date{};
 
   strptime("2021-04-01", "%F", &tm_date);
 
-  MadokaLogLineConverter converter{"もの書き", tm_date};
+  MadokaLineConverter converter{"もの書き", tm_date};
   const auto m = converter.ToMessage("01:05:52 Mode by Toybox: #もの書き +v ocha ");
 
   REQUIRE_FALSE(m);
