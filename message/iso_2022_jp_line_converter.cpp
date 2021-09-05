@@ -137,12 +137,13 @@ Iso2022JpLineConverter::Iso2022JpLineConverter(
 Iso2022JpLineConverter::~Iso2022JpLineConverter() = default;
 
 std::unique_ptr<MessageBase>
-Iso2022JpLineConverter::DoToMessage(std::string const& line) const {
+Iso2022JpLineConverter::DoToMessage(const std::string& line) const {
   std::vector<size_t> plain_code_indices;
 
   std::string escaped = EscapeMIrcPlain(line, plain_code_indices);
-  auto [end_in_ascii, charset_fixed] = ForceToEndInAscii(escaped);
-  icu::UnicodeString escaped_unicode(end_in_ascii.c_str(), "iso-2022-jp");
+  Iso2022JpCharsetFixResult charset_fix_result = ForceToEndInAscii(escaped);
+  icu::UnicodeString escaped_unicode{charset_fix_result.fixed_line.c_str(),
+                                     "iso-2022-jp"};
   UnescapeMIrcPlain(escaped_unicode, plain_code_indices);
 
   std::string unescaped;
@@ -150,7 +151,11 @@ Iso2022JpLineConverter::DoToMessage(std::string const& line) const {
 
   std::unique_ptr<MessageBase> message =
       utf8_line_converter_->ToMessage(unescaped);
-  // TODO: charset_fixedの情報を格納する
+  if (!message) {
+    return message;
+  }
+
+  message->SetIso2022JpCharsetFixed(charset_fix_result.charset_fixed);
 
   return message;
 }

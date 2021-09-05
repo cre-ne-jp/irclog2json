@@ -66,6 +66,10 @@ TEST_CASE("Madoka ISO-2022-JP KICK with message") {
   SUBCASE("message") {
     CHECK_OBJ_STR_EQ(o, "message", "ごめんね。");
   }
+
+  SUBCASE("iso2022JpCharsetFixed") {
+    CHECK_UNARY_FALSE(o.at("iso2022JpCharsetFixed").get<bool>());
+  }
 }
 
 TEST_CASE("Madoka ISO-2022-JP KICK with message 最後にASCII選択なし") {
@@ -120,5 +124,9 @@ TEST_CASE("Madoka ISO-2022-JP KICK with message 最後にASCII選択なし") {
 
   SUBCASE("message") {
     CHECK_OBJ_STR_EQ(o, "message", "ごめんね。");
+  }
+
+  SUBCASE("iso2022JpCharsetFixed") {
+    CHECK_UNARY(o.at("iso2022JpCharsetFixed").get<bool>());
   }
 }

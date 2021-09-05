@@ -60,6 +60,10 @@ TEST_CASE("Madoka ISO-2022-JP PRIVMSG") {
   SUBCASE("message") {
     CHECK_OBJ_STR_EQ(o, "message", "てすと");
   }
+
+  SUBCASE("iso2022JpCharsetFixed") {
+    CHECK_UNARY_FALSE(o.at("iso2022JpCharsetFixed").get<bool>());
+  }
 }
 
 TEST_CASE("Madoka ISO-2022-JP PRIVMSG 最後にASCII選択なし") {
@@ -107,5 +111,9 @@ TEST_CASE("Madoka ISO-2022-JP PRIVMSG 最後にASCII選択なし") {
 
   SUBCASE("message") {
     CHECK_OBJ_STR_EQ(o, "message", "てすと");
+  }
+
+  SUBCASE("iso2022JpCharsetFixed") {
+    CHECK_UNARY_FALSE(o.at("iso2022JpCharsetFixed").get<bool>());
   }
 }
