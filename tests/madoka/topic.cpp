@@ -12,13 +12,13 @@
 #include "tests/test_helper.h"
 
 TEST_CASE("Madoka TOPIC") {
-  using irclog2json::message::MadokaLogLineConverter;
+  using irclog2json::message::MadokaLineConverter;
 
   struct tm tm_date{};
 
   strptime("1999-02-21", "%F", &tm_date);
 
-  MadokaLogLineConverter converter{"kataribe", tm_date};
+  MadokaLineConverter converter{"kataribe", tm_date};
   const auto m = converter.ToMessage("00:38:04 Topic of channel #kataribe by sf: 創作TRPG語り部関係雑談:質問者・相談者歓迎(MLに全転送)");
 
   REQUIRE(m);

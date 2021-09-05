@@ -1,0 +1,8 @@
+﻿---
+BasedOnStyle: LLVM
+AllowShortFunctionsOnASingleLine: None
+ConstructorInitializerAllOnOneLineOrOnePerLine: 'true'
+PointerAlignment: Left
+Standard: Cpp11
+
+...

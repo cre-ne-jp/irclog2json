@@ -12,13 +12,13 @@
 #include "tests/test_helper.h"
 
 TEST_CASE("Tiarra PRIVMSG") {
-  using irclog2json::message::TiarraLogLineConverter;
+  using irclog2json::message::TiarraLineConverter;
 
   struct tm tm_date{};
 
   strptime("2021-04-01", "%F", &tm_date);
 
-  TiarraLogLineConverter converter{"cre", tm_date};
+  TiarraLineConverter converter{"cre", tm_date};
   const auto m = converter.ToMessage("12:34:56 <Toybox> てすと");
 
   REQUIRE(m);

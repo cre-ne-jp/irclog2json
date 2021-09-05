@@ -2,23 +2,36 @@
 
 #include "message_base.h"
 
-#include <string>
 #include <ctime>
 #include <picojson.h>
+#include <string>
 
 namespace irclog2json {
-  namespace message {
-    class BasicMessage : public MessageBase {
-    public:
-      BasicMessage(const char* type, std::string const& channel, struct tm const& timestamp, std::string const& nick, std::string const& message);
-      virtual ~BasicMessage() = default;
+namespace message {
 
-    protected:
-      virtual picojson::object DoToJsonObject() const override;
+/** 基本的なIRCメッセージを表すクラス。 */
+class BasicMessage : public MessageBase {
+public:
+  /**
+   * @param type メッセージの種類。
+   * @param channel チャンネル名。
+   * @param timestamp タイムスタンプ。
+   * @param nick ニックネーム。
+   * @param message メッセージの内容。
+   */
+  BasicMessage(const char* type, const std::string& channel,
+               const struct tm& timestamp, const std::string& nick,
+               const std::string& message);
+  virtual ~BasicMessage() = default;
 
-    private:
-      const std::string message_;
-    };
-  }
-}
+protected:
+  /** JSONオブジェクトへの変換処理の実装。 */
+  virtual picojson::object DoToJsonObject() const override;
 
+private:
+  /** メッセージの内容。 */
+  const std::string message_;
+};
+
+} // namespace message
+} // namespace irclog2json
