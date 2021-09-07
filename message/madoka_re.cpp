@@ -40,6 +40,8 @@
   R"((\d{2}):(\d{2}):(\d{2}) Topic of channel )" CHANNEL_PATTERN               \
   " by (" TARGET_PATTERN "): (.*)"
 
+#define AUTO_DOWN_PATTERN R"((\d{2}):(\d{2}):(\d{2}) \[!\] auto down)"
+
 namespace irclog2json {
 namespace message {
 namespace madoka {
@@ -53,6 +55,7 @@ const std::regex RePart{PART_PATTERN};
 const std::regex ReQuit{QUIT_PATTERN};
 const std::regex ReKick{KICK_PATTERN};
 const std::regex ReTopic{TOPIC_PATTERN};
+const std::regex ReAutoDown{AUTO_DOWN_PATTERN};
 
 } // namespace madoka
 } // namespace message

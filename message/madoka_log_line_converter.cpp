@@ -107,6 +107,11 @@ MadokaLineConverter::DoToMessage(std::string const& line) const {
                                           message);
   }
 
+  if (std::regex_match(line, m, madoka::ReAutoDown)) {
+    timestamp = GetTimestamp(m);
+    return std::make_unique<BasicMessage>("QUIT", channel_, timestamp, "bot", R"("auto down")");
+  }
+
   return std::unique_ptr<MessageBase>{};
 }
 

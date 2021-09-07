@@ -25,6 +25,7 @@ add_executable(${test_target}
   madoka/kick.cpp
   madoka/join.cpp
 
+  madoka/auto_down.cpp
   madoka/mode.cpp
   madoka/time_tone.cpp
 
