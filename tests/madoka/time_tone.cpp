@@ -6,15 +6,15 @@
 
 #include <picojson.h>
 
+#include "message/madoka_line_converter.h"
 #include "message/message_base.h"
-#include "message/madoka_log_line_converter.h"
 
 #include "tests/test_helper.h"
 
 TEST_CASE("Madoka time tone") {
   using irclog2json::message::MadokaLineConverter;
 
-  struct tm tm_date{};
+  struct tm tm_date {};
 
   strptime("2000-02-27", "%F", &tm_date);
 
@@ -27,7 +27,7 @@ TEST_CASE("Madoka time tone") {
 TEST_CASE("Madoka time tone at EOF") {
   using irclog2json::message::MadokaLineConverter;
 
-  struct tm tm_date{};
+  struct tm tm_date {};
 
   strptime("2000-02-07", "%F", &tm_date);
 

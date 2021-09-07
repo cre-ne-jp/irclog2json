@@ -7,10 +7,10 @@
 #include "message/utf8_line_converter.h"
 
 #include "message/tiarra_iso_2022_jp_line_converter.h"
-#include "message/tiarra_log_line_converter.h"
+#include "message/tiarra_line_converter.h"
 
 #include "message/madoka_iso_2022_jp_line_converter.h"
-#include "message/madoka_log_line_converter.h"
+#include "message/madoka_line_converter.h"
 
 #include "message/message_base.h"
 

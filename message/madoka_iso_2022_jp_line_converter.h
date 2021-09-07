@@ -5,7 +5,7 @@
 
 #include "iso_2022_jp_line_converter.h"
 
-#include "madoka_log_line_converter.h"
+#include "madoka_line_converter.h"
 
 namespace irclog2json {
 namespace message {

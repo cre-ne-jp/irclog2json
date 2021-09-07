@@ -30,11 +30,11 @@ add_library(${target_common_lib}
   message/utf8_line_converter.cpp
   message/iso_2022_jp_line_converter.cpp
 
-  message/tiarra_log_line_converter.cpp
+  message/tiarra_line_converter.cpp
   message/tiarra_iso_2022_jp_line_converter.cpp
   message/tiarra_re.cpp
 
-  message/madoka_log_line_converter.cpp
+  message/madoka_line_converter.cpp
   message/madoka_iso_2022_jp_line_converter.cpp
   message/madoka_re.cpp
 

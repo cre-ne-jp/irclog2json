@@ -6,7 +6,7 @@
 #include "line_converter_re.h"
 #include "utf8_line_converter.h"
 
-#include "tiarra_log_line_converter.h"
+#include "tiarra_line_converter.h"
 #include "tiarra_re.h"
 
 #include "message_base.h"

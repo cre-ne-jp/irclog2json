@@ -7,7 +7,7 @@
 #include <picojson.h>
 
 #include "message/message_base.h"
-#include "message/tiarra_log_line_converter.h"
+#include "message/tiarra_line_converter.h"
 
 #include "tests/test_helper.h"
 
