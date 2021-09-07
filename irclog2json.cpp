@@ -12,6 +12,8 @@
 #include "message/madoka_iso_2022_jp_line_converter.h"
 #include "message/madoka_log_line_converter.h"
 
+#include "message/message_base.h"
+
 #include <memory>
 
 #include <clocale>
@@ -24,6 +26,7 @@
 #include <libgen.h>
 #include <regex>
 #include <string>
+#include <vector>
 
 #include <picojson.h>
 
@@ -200,6 +203,7 @@ ConvertLogToJsonObjects(std::ifstream& ifs, std::string const& channel,
   using irclog2json::message::LineConverter;
   using irclog2json::message::MadokaIso2022JpLineConverter;
   using irclog2json::message::MadokaLineConverter;
+  using irclog2json::message::MessageBase;
   using irclog2json::message::TiarraIso2022JpLineConverter;
   using irclog2json::message::TiarraLineConverter;
   using irclog2json::message::UTF8LineConverter;
@@ -239,7 +243,17 @@ ConvertLogToJsonObjects(std::ifstream& ifs, std::string const& channel,
   }
 
   irclog2json::Converter converter{&ifs, std::move(line_converter)};
-  return converter.Convert();
+  std::vector<std::unique_ptr<MessageBase>> messages =
+      converter.ExtractMessages();
+
+  picojson::array json_messages;
+  json_messages.reserve(messages.size());
+
+  for (const auto& m : messages) {
+    json_messages.emplace_back(m->ToJsonObject());
+  }
+
+  return picojson::value{json_messages};
 }
 
 static void PrintUsage(char* argv0, std::ostream& os) {

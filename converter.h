@@ -2,10 +2,12 @@
 
 #include <fstream>
 #include <memory>
+#include <vector>
 
 #include <picojson.h>
 
 #include "message/line_converter.h"
+#include "message/message_base.h"
 
 namespace irclog2json {
 
@@ -20,7 +22,7 @@ public:
   Converter& operator=(Converter const&) = delete;
   Converter& operator=(Converter&&) = delete;
 
-  picojson::value Convert() const;
+  std::vector<std::unique_ptr<message::MessageBase>> ExtractMessages() const;
 
 private:
   std::ifstream* const f_;

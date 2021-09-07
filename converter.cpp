@@ -18,8 +18,9 @@ Converter::Converter(std::ifstream* const f,
 
 Converter::~Converter() = default;
 
-picojson::value Converter::Convert() const {
-  picojson::array json_lines;
+std::vector<std::unique_ptr<message::MessageBase>>
+Converter::ExtractMessages() const {
+  std::vector<std::unique_ptr<message::MessageBase>> messages;
 
   std::string line;
   while (std::getline(*f_, line)) {
@@ -27,13 +28,14 @@ picojson::value Converter::Convert() const {
       std::unique_ptr<message::MessageBase> message =
           line_converter_->ToMessage(line);
       if (message) {
-        json_lines.emplace_back(message->ToJsonObject());
+        messages.push_back(std::move(message));
       } else {
         std::cout << "Ignored: " << line << std::endl;
       }
     }
   }
 
-  return picojson::value(json_lines);
+  return messages;
 }
+
 } // namespace irclog2json
