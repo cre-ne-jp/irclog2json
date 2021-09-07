@@ -42,6 +42,7 @@ add_library(${target_common_lib}
   message/basic_message.cpp
   message/join.cpp
   message/kick.cpp
+  message/madoka_auto_down.cpp
 
   converter.cpp
 )

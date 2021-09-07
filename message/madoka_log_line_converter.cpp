@@ -14,6 +14,7 @@
 #include "basic_message.h"
 #include "join.h"
 #include "kick.h"
+#include "madoka_auto_down.h"
 
 namespace irclog2json {
 namespace message {
@@ -109,7 +110,7 @@ MadokaLineConverter::DoToMessage(std::string const& line) const {
 
   if (std::regex_match(line, m, madoka::ReAutoDown)) {
     timestamp = GetTimestamp(m);
-    return std::make_unique<BasicMessage>("QUIT", channel_, timestamp, "bot", R"("auto down")");
+    return std::make_unique<MadokaAutoDown>(channel_, timestamp);
   }
 
   return std::unique_ptr<MessageBase>{};
