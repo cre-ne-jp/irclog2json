@@ -3,10 +3,10 @@
 #include <regex>
 #include <string>
 
-#include "line_converter_re.h"
-#include "utf8_line_converter.h"
+#include "line_parser_re.h"
+#include "utf8_line_parser.h"
 
-#include "tiarra_line_converter.h"
+#include "tiarra_line_parser.h"
 #include "tiarra_re.h"
 
 #include "message_base.h"

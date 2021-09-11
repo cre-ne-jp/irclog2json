@@ -3,8 +3,8 @@
 #include <memory>
 #include <string>
 
-#include "line_converter.h"
-#include "utf8_line_converter.h"
+#include "line_parser.h"
+#include "utf8_line_parser.h"
 
 namespace irclog2json {
 namespace message {

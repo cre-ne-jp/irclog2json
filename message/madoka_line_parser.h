@@ -5,7 +5,7 @@
 #include <string>
 
 #include "message_base.h"
-#include "utf8_line_converter.h"
+#include "utf8_line_parser.h"
 
 namespace irclog2json {
 namespace message {

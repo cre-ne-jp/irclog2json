@@ -5,7 +5,7 @@
 #include <regex>
 #include <string>
 
-#include "line_converter.h"
+#include "line_parser.h"
 
 namespace irclog2json {
 namespace message {

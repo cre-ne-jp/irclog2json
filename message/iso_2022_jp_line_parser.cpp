@@ -5,9 +5,9 @@
 #include <unicode/unistr.h>
 
 #include "message_base.h"
-#include "utf8_line_converter.h"
+#include "utf8_line_parser.h"
 
-#include "iso_2022_jp_line_converter.h"
+#include "iso_2022_jp_line_parser.h"
 
 namespace {
 /**

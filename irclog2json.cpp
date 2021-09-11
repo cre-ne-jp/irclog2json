@@ -1,15 +1,15 @@
 #include "options.h"
 
-#include "message/line_converter.h"
+#include "message/line_parser.h"
 
-#include "message/iso_2022_jp_line_converter.h"
-#include "message/utf8_line_converter.h"
+#include "message/iso_2022_jp_line_parser.h"
+#include "message/utf8_line_parser.h"
 
-#include "message/tiarra_iso_2022_jp_line_converter.h"
-#include "message/tiarra_line_converter.h"
+#include "message/tiarra_iso_2022_jp_line_parser.h"
+#include "message/tiarra_line_parser.h"
 
-#include "message/madoka_iso_2022_jp_line_converter.h"
-#include "message/madoka_line_converter.h"
+#include "message/madoka_iso_2022_jp_line_parser.h"
+#include "message/madoka_line_parser.h"
 
 #include "message/message_base.h"
 

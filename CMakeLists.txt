@@ -27,15 +27,15 @@ set(target_common_lib irclog2json-common)
 add_library(${target_common_lib}
   STATIC
 
-  message/utf8_line_converter.cpp
-  message/iso_2022_jp_line_converter.cpp
+  message/utf8_line_parser.cpp
+  message/iso_2022_jp_line_parser.cpp
 
-  message/tiarra_line_converter.cpp
-  message/tiarra_iso_2022_jp_line_converter.cpp
+  message/tiarra_line_parser.cpp
+  message/tiarra_iso_2022_jp_line_parser.cpp
   message/tiarra_re.cpp
 
-  message/madoka_line_converter.cpp
-  message/madoka_iso_2022_jp_line_converter.cpp
+  message/madoka_line_parser.cpp
+  message/madoka_iso_2022_jp_line_parser.cpp
   message/madoka_re.cpp
 
   message/message_base.cpp

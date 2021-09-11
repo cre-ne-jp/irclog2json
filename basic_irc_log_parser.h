@@ -8,7 +8,7 @@
 
 #include "irc_log_parser.h"
 
-#include "message/line_converter.h"
+#include "message/line_parser.h"
 #include "message/message_base.h"
 
 namespace irclog2json {

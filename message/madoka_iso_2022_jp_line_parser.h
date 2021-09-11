@@ -3,9 +3,9 @@
 #include <memory>
 #include <string>
 
-#include "iso_2022_jp_line_converter.h"
+#include "iso_2022_jp_line_parser.h"
 
-#include "madoka_line_converter.h"
+#include "madoka_line_parser.h"
 
 namespace irclog2json {
 namespace message {

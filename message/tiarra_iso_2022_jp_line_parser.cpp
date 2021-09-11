@@ -2,8 +2,8 @@
 #include <regex>
 #include <string>
 
-#include "iso_2022_jp_line_converter.h"
-#include "tiarra_iso_2022_jp_line_converter.h"
+#include "iso_2022_jp_line_parser.h"
+#include "tiarra_iso_2022_jp_line_parser.h"
 #include "tiarra_re.h"
 
 namespace irclog2json {

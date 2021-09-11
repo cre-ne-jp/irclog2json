@@ -6,7 +6,7 @@
 
 #include <picojson.h>
 
-#include "message/madoka_line_converter.h"
+#include "message/madoka_line_parser.h"
 #include "message/message_base.h"
 
 #include "tests/test_helper.h"

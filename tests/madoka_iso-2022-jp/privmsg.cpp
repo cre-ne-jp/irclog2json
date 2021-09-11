@@ -8,8 +8,8 @@
 
 #include "message/message_base.h"
 
-#include "message/madoka_iso_2022_jp_line_converter.h"
-#include "message/madoka_line_converter.h"
+#include "message/madoka_iso_2022_jp_line_parser.h"
+#include "message/madoka_line_parser.h"
 
 #include "tests/test_helper.h"
 

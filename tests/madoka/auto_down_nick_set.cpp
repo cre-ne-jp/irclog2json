@@ -12,7 +12,7 @@
 #include "madoka_log_parser.h"
 
 #include "message/madoka_auto_down.h"
-#include "message/madoka_line_converter.h"
+#include "message/madoka_line_parser.h"
 #include "message/message_base.h"
 
 #include "tests/test_helper.h"
