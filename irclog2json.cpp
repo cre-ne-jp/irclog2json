@@ -28,6 +28,7 @@
 #include <getopt.h>
 #include <iostream>
 #include <libgen.h>
+#include <optional>
 #include <regex>
 #include <string>
 #include <vector>
@@ -80,17 +81,17 @@ int main(int argc, char* argv[]) {
 
   if (print_usage) {
     PrintUsage(argv0, no_invalid_option ? std::cout : std::cerr);
-    std::exit(no_invalid_option ? 0 : 1);
+    return no_invalid_option ? 0 : 1;
   }
 
   if (argc != 2) {
     PrintUsage(argv0, std::cerr);
-    std::exit(1);
+    return 1;
   }
 
   if (options.log_format == irclog2json::Options::LogFormat::NotSpecified) {
     std::cerr << "Specify the log format." << std::endl;
-    std::exit(1);
+    return 1;
   }
 
   // basename(3) が文字列を変更するので退避する意味も含む
@@ -106,7 +107,7 @@ int main(int argc, char* argv[]) {
   char* rest = strptime(file_basename, "%Y%m%d.txt", &tm_date);
   if (rest == NULL || *rest != '\0') {
     std::cerr << filename << ": Invalid date" << std::endl;
-    std::exit(1);
+    return 1;
   }
 
   // 出力ファイル名を決める
@@ -114,30 +115,30 @@ int main(int argc, char* argv[]) {
   // 末尾の .txt -> .json
   out_filename.replace(out_filename.size() - 3, 3, "json");
 
-  std::ifstream ifs;
+  std::optional<picojson::value> result;
+  {
+    std::ifstream ifs;
 
-  ifs.open(filename);
-  if (ifs.fail()) {
-    std::perror(filename.c_str());
-    std::exit(1);
+    ifs.open(filename);
+    if (ifs.fail()) {
+      std::perror(filename.c_str());
+      return 1;
+    }
+
+    result = ConvertLogToJsonObjects(&ifs, channel, tm_date, options);
   }
 
-  picojson::value result =
-      ConvertLogToJsonObjects(&ifs, channel, tm_date, options);
+  {
+    std::ofstream ofs;
 
-  ifs.close();
+    ofs.open(out_filename);
+    if (ofs.fail()) {
+      std::perror(out_filename.c_str());
+      return 1;
+    }
 
-  std::ofstream ofs;
-
-  ofs.open(out_filename);
-  if (ofs.fail()) {
-    std::perror(out_filename.c_str());
-    std::exit(1);
+    ofs << result->serialize(options.pretty);
   }
-
-  ofs << result.serialize(options.pretty);
-
-  ofs.close();
 
   std::cout << "Output " << out_filename << '.' << std::endl;
 
