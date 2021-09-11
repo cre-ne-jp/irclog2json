@@ -4,8 +4,8 @@
 
 #include <picojson.h>
 
-#define CHECK_OBJ_STR_EQ(obj, key, expected) \
-  do { \
-    const auto& v = (obj).at((key)).get<std::string>(); \
-    CHECK_MESSAGE(v.compare((expected)) == 0, "actual: ", v); \
+#define CHECK_OBJ_STR_EQ(obj, key, expected)                                   \
+  do {                                                                         \
+    const auto& v = (obj).at((key)).get<std::string>();                        \
+    CHECK_EQ(v, (expected));                                                   \
   } while (false)

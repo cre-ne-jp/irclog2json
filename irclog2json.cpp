@@ -1,4 +1,3 @@
-#include "basic_irc_log_parser.h"
 #include "options.h"
 
 #include "message/line_converter.h"
@@ -13,6 +12,11 @@
 #include "message/madoka_line_converter.h"
 
 #include "message/message_base.h"
+
+#include "irc_log_parser.h"
+
+#include "basic_irc_log_parser.h"
+#include "madoka_log_parser.h"
 
 #include <memory>
 
@@ -51,9 +55,9 @@ static bool ParseOptions(int argc, char* argv[], irclog2json::Options& options,
  * @return 変換結果。JSONオブジェクトの配列。
  */
 static picojson::value
-ConvertLogToJsonObjects(std::ifstream& ifs, std::string const& channel,
-                        struct tm const& tm_date,
-                        irclog2json::Options const& options);
+ConvertLogToJsonObjects(std::ifstream* ifs, const std::string& channel,
+                        const struct tm& tm_date,
+                        const irclog2json::Options& options);
 
 /**
  * @brief 使用法を表示する。
@@ -119,7 +123,7 @@ int main(int argc, char* argv[]) {
   }
 
   picojson::value result =
-      ConvertLogToJsonObjects(ifs, channel, tm_date, options);
+      ConvertLogToJsonObjects(&ifs, channel, tm_date, options);
 
   ifs.close();
 
@@ -197,9 +201,13 @@ static bool ParseOptions(int argc, char* argv[], irclog2json::Options& options,
 }
 
 static picojson::value
-ConvertLogToJsonObjects(std::ifstream& ifs, std::string const& channel,
+ConvertLogToJsonObjects(std::ifstream* ifs, std::string const& channel,
                         struct tm const& tm_date,
                         irclog2json::Options const& options) {
+  using irclog2json::BasicIrcLogParser;
+  using irclog2json::IrcLogParser;
+  using irclog2json::MadokaLogParser;
+
   using irclog2json::message::LineConverter;
   using irclog2json::message::MadokaIso2022JpLineConverter;
   using irclog2json::message::MadokaLineConverter;
@@ -207,44 +215,58 @@ ConvertLogToJsonObjects(std::ifstream& ifs, std::string const& channel,
   using irclog2json::message::TiarraIso2022JpLineConverter;
   using irclog2json::message::TiarraLineConverter;
   using irclog2json::message::UTF8LineConverter;
+
   using LogFormat = irclog2json::Options::LogFormat;
 
-  std::unique_ptr<LineConverter> line_converter;
+  std::unique_ptr<IrcLogParser> parser;
 
-  switch (options.log_format) {
-  case LogFormat::Tiarra: {
-    auto utf8_line_converter =
-        std::make_unique<TiarraLineConverter>(channel, tm_date);
+  {
+    std::unique_ptr<LineConverter> line_converter;
 
-    if (options.iso_2022_jp) {
-      line_converter = std::make_unique<TiarraIso2022JpLineConverter>(
-          std::move(utf8_line_converter));
-    } else {
-      line_converter = std::move(utf8_line_converter);
+    switch (options.log_format) {
+    case LogFormat::Tiarra: {
+      {
+        auto utf8_line_converter =
+            std::make_unique<TiarraLineConverter>(channel, tm_date);
+
+        if (options.iso_2022_jp) {
+          line_converter = std::make_unique<TiarraIso2022JpLineConverter>(
+              std::move(utf8_line_converter));
+        } else {
+          line_converter = std::move(utf8_line_converter);
+        }
+      }
+
+      parser =
+          std::make_unique<BasicIrcLogParser>(ifs, std::move(line_converter));
+
+      break;
     }
+    case LogFormat::Madoka: {
+      {
+        auto utf8_line_converter =
+            std::make_unique<MadokaLineConverter>(channel, tm_date);
 
-    break;
-  }
-  case LogFormat::Madoka: {
-    auto utf8_line_converter =
-        std::make_unique<MadokaLineConverter>(channel, tm_date);
+        if (options.iso_2022_jp) {
+          line_converter = std::make_unique<MadokaIso2022JpLineConverter>(
+              std::move(utf8_line_converter));
+        } else {
+          line_converter = std::move(utf8_line_converter);
+        }
+      }
 
-    if (options.iso_2022_jp) {
-      line_converter = std::make_unique<MadokaIso2022JpLineConverter>(
-          std::move(utf8_line_converter));
-    } else {
-      line_converter = std::move(utf8_line_converter);
+      parser =
+          std::make_unique<MadokaLogParser>(ifs, std::move(line_converter));
+
+      break;
     }
-
-    break;
-  }
-  default:
-    return picojson::value{picojson::array{}};
+    default:
+      return picojson::value{picojson::array{}};
+    }
   }
 
-  irclog2json::BasicIrcLogParser converter{&ifs, std::move(line_converter)};
   std::vector<std::unique_ptr<MessageBase>> messages =
-      converter.ExtractMessages();
+      parser->ExtractMessages();
 
   picojson::array json_messages;
   json_messages.reserve(messages.size());

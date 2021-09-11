@@ -25,6 +25,19 @@ public:
   MessageBase& operator=(MessageBase const&) = delete;
   MessageBase& operator=(MessageBase&&) = delete;
 
+  /** ニックネームを返す。 */
+  std::string GetNick() const {
+    return nick_;
+  }
+
+  /**
+   * @brief ニックネームを設定する。
+   * @param new_nick 新しいニックネーム。
+   */
+  void SetNick(const std::string& new_nick) {
+    nick_ = new_nick;
+  }
+
   /** JSONオブジェクトに変換する。 */
   picojson::object ToJsonObject() const {
     return DoToJsonObject();
@@ -47,7 +60,7 @@ private:
   /** タイムスタンプ。 */
   const struct tm timestamp_;
   /** ニックネーム。 */
-  const std::string nick_;
+  std::string nick_;
 
   /** ISO-2022-JPの文字集合が修正されたか。 */
   bool iso_2022_jp_charset_fixed_;
