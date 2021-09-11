@@ -6,20 +6,20 @@
 
 #include <picojson.h>
 
+#include "message/madoka_line_parser.h"
 #include "message/message_base.h"
-#include "message/madoka_log_line_converter.h"
 
 #include "tests/test_helper.h"
 
 TEST_CASE("Madoka NICK from user") {
-  using irclog2json::message::MadokaLineConverter;
+  using irclog2json::message::MadokaLineParser;
 
-  struct tm tm_date{};
+  struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
-  MadokaLineConverter converter{"cre", tm_date};
-  const auto m = converter.ToMessage("12:34:56 ocha -> ocha[away]");
+  MadokaLineParser parser{"cre", tm_date};
+  const auto m = parser.ToMessage("12:34:56 ocha -> ocha[away]");
 
   REQUIRE(m);
 
@@ -47,14 +47,14 @@ TEST_CASE("Madoka NICK from user") {
 }
 
 TEST_CASE("Madoka NICK from self") {
-  using irclog2json::message::MadokaLineConverter;
+  using irclog2json::message::MadokaLineParser;
 
-  struct tm tm_date{};
+  struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
-  MadokaLineConverter converter{"cre", tm_date};
-  const auto m = converter.ToMessage("14:12:46 [!] nick changed (dice2 -> dice)");
+  MadokaLineParser parser{"cre", tm_date};
+  const auto m = parser.ToMessage("14:12:46 [!] nick changed (dice2 -> dice)");
 
   REQUIRE(m);
 

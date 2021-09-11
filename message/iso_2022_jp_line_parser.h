@@ -3,8 +3,8 @@
 #include <memory>
 #include <string>
 
-#include "line_converter.h"
-#include "utf8_line_converter.h"
+#include "line_parser.h"
+#include "utf8_line_parser.h"
 
 namespace irclog2json {
 namespace message {
@@ -17,16 +17,15 @@ struct Iso2022JpCharsetFixResult {
   bool charset_fixed;
 };
 
-/** ISO-2022-JPのIRCログの行変換器の抽象クラス。 */
-class Iso2022JpLineConverter : public LineConverter {
+/** ISO-2022-JPのIRCログの行解析器の抽象クラス。 */
+class Iso2022JpLineParser : public LineParser {
 public:
   /**
-   * @param utf8_line_converter UTF-8の行変換器。
+   * @param utf8_line_parser UTF-8の行解析器。
    */
-  Iso2022JpLineConverter(
-      std::unique_ptr<UTF8LineConverter>&& utf8_line_converter);
+  Iso2022JpLineParser(std::unique_ptr<UTF8LineParser>&& utf8_line_parser);
 
-  virtual ~Iso2022JpLineConverter();
+  virtual ~Iso2022JpLineParser();
 
   /**
    * @brief ISO-2022-JPの文字集合がASCIIで終わるようにする。
@@ -50,8 +49,8 @@ protected:
   bool EndInASCII(const std::string& line) const;
 
 private:
-  /** UTF-8の行変換器。 */
-  std::unique_ptr<UTF8LineConverter> const utf8_line_converter_;
+  /** UTF-8の行解析器。 */
+  std::unique_ptr<UTF8LineParser> const utf8_line_parser_;
 
   /**
    * @brief IRCログの行のメッセージオブジェクトへの変換の実装。

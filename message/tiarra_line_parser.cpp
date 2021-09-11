@@ -3,10 +3,10 @@
 #include <regex>
 #include <string>
 
-#include "line_converter_re.h"
-#include "utf8_line_converter.h"
+#include "line_parser_re.h"
+#include "utf8_line_parser.h"
 
-#include "tiarra_log_line_converter.h"
+#include "tiarra_line_parser.h"
 #include "tiarra_re.h"
 
 #include "message_base.h"
@@ -18,10 +18,10 @@
 namespace irclog2json {
 namespace message {
 
-TiarraLineConverter::~TiarraLineConverter() = default;
+TiarraLineParser::~TiarraLineParser() = default;
 
 std::unique_ptr<MessageBase>
-TiarraLineConverter::DoToMessage(const std::string& line) const {
+TiarraLineParser::DoToMessage(const std::string& line) const {
   std::smatch m;
   struct tm timestamp = {};
 

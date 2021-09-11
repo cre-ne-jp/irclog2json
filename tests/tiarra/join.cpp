@@ -7,19 +7,20 @@
 #include <picojson.h>
 
 #include "message/message_base.h"
-#include "message/tiarra_log_line_converter.h"
+#include "message/tiarra_line_parser.h"
 
 #include "tests/test_helper.h"
 
 TEST_CASE("Tiarra JOIN from FQDN") {
-  using irclog2json::message::TiarraLineConverter;
+  using irclog2json::message::TiarraLineParser;
 
-  struct tm tm_date{};
+  struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
-  TiarraLineConverter converter{"もの書き", tm_date};
-  const auto m = converter.ToMessage("22:21:16 + Toybox_ (Toybox_!dicebot@services.cre.jp) to #もの書き@cre");
+  TiarraLineParser parser{"もの書き", tm_date};
+  const auto m = parser.ToMessage(
+      "22:21:16 + Toybox_ (Toybox_!dicebot@services.cre.jp) to #もの書き@cre");
 
   REQUIRE(m);
 
@@ -55,14 +56,15 @@ TEST_CASE("Tiarra JOIN from FQDN") {
 }
 
 TEST_CASE("Tiarra JOIN from IP") {
-  using irclog2json::message::TiarraLineConverter;
+  using irclog2json::message::TiarraLineParser;
 
-  struct tm tm_date{};
+  struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
-  TiarraLineConverter converter{"もの書き", tm_date};
-  const auto m = converter.ToMessage("22:21:16 + Toybox_ (Toybox_!dicebot@192.168.0.1) to #もの書き@cre");
+  TiarraLineParser parser{"もの書き", tm_date};
+  const auto m = parser.ToMessage(
+      "22:21:16 + Toybox_ (Toybox_!dicebot@192.168.0.1) to #もの書き@cre");
 
   REQUIRE(m);
 

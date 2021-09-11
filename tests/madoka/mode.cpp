@@ -6,20 +6,21 @@
 
 #include <picojson.h>
 
+#include "message/madoka_line_parser.h"
 #include "message/message_base.h"
-#include "message/madoka_log_line_converter.h"
 
 #include "tests/test_helper.h"
 
 TEST_CASE("Madoka MODE") {
-  using irclog2json::message::MadokaLineConverter;
+  using irclog2json::message::MadokaLineParser;
 
-  struct tm tm_date{};
+  struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
-  MadokaLineConverter converter{"もの書き", tm_date};
-  const auto m = converter.ToMessage("01:05:52 Mode by Toybox: #もの書き +v ocha ");
+  MadokaLineParser parser{"もの書き", tm_date};
+  const auto m =
+      parser.ToMessage("01:05:52 Mode by Toybox: #もの書き +v ocha ");
 
   REQUIRE_FALSE(m);
 }

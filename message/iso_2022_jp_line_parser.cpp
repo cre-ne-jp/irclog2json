@@ -5,9 +5,9 @@
 #include <unicode/unistr.h>
 
 #include "message_base.h"
-#include "utf8_line_converter.h"
+#include "utf8_line_parser.h"
 
-#include "iso_2022_jp_line_converter.h"
+#include "iso_2022_jp_line_parser.h"
 
 namespace {
 /**
@@ -165,15 +165,15 @@ void UnescapeMIrcPlain(icu::UnicodeString& s,
 namespace irclog2json {
 namespace message {
 
-Iso2022JpLineConverter::Iso2022JpLineConverter(
-    std::unique_ptr<UTF8LineConverter>&& utf8_line_converter)
-    : utf8_line_converter_{std::move(utf8_line_converter)} {
+Iso2022JpLineParser::Iso2022JpLineParser(
+    std::unique_ptr<UTF8LineParser>&& utf8_line_parser)
+    : utf8_line_parser_{std::move(utf8_line_parser)} {
 }
 
-Iso2022JpLineConverter::~Iso2022JpLineConverter() = default;
+Iso2022JpLineParser::~Iso2022JpLineParser() = default;
 
 std::unique_ptr<MessageBase>
-Iso2022JpLineConverter::DoToMessage(const std::string& line) const {
+Iso2022JpLineParser::DoToMessage(const std::string& line) const {
   std::vector<size_t> plain_code_indices;
 
   std::string escaped = EscapeMIrcPlain(line, plain_code_indices);
@@ -186,7 +186,7 @@ Iso2022JpLineConverter::DoToMessage(const std::string& line) const {
   escaped_unicode.toUTF8String(unescaped);
 
   std::unique_ptr<MessageBase> message =
-      utf8_line_converter_->ToMessage(unescaped);
+      utf8_line_parser_->ToMessage(unescaped);
   if (!message) {
     return message;
   }
@@ -196,7 +196,7 @@ Iso2022JpLineConverter::DoToMessage(const std::string& line) const {
   return message;
 }
 
-bool Iso2022JpLineConverter::EndInASCII(const std::string& line) const {
+bool Iso2022JpLineParser::EndInASCII(const std::string& line) const {
   std::size_t last_jisx0208_pos = line.rfind(SwitchToJISX0208);
   std::size_t last_ascii_pos = line.rfind(SwitchToASCII);
 

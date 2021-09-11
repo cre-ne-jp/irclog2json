@@ -5,16 +5,16 @@
 #include <string>
 
 #include "message_base.h"
-#include "utf8_line_converter.h"
+#include "utf8_line_parser.h"
 
 namespace irclog2json {
 namespace message {
 
-/** Madokaログの行変換器。 */
-class MadokaLineConverter : public UTF8LineConverter {
+/** Madokaログの行解析器。 */
+class MadokaLineParser : public UTF8LineParser {
 public:
-  using UTF8LineConverter::UTF8LineConverter;
-  virtual ~MadokaLineConverter();
+  using UTF8LineParser::UTF8LineParser;
+  virtual ~MadokaLineParser();
 
 private:
   virtual std::unique_ptr<MessageBase>

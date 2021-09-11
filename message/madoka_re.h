@@ -15,6 +15,7 @@ extern const std::regex RePart;
 extern const std::regex ReQuit;
 extern const std::regex ReKick;
 extern const std::regex ReTopic;
+extern const std::regex ReAutoDown;
 
 } // namespace madoka
 } // namespace message

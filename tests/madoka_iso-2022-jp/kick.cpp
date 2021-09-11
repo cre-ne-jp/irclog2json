@@ -8,23 +8,22 @@
 
 #include "message/message_base.h"
 
-#include "message/madoka_iso_2022_jp_line_converter.h"
-#include "message/madoka_log_line_converter.h"
+#include "message/madoka_iso_2022_jp_line_parser.h"
+#include "message/madoka_line_parser.h"
 
 #include "tests/test_helper.h"
 
 TEST_CASE("Madoka ISO-2022-JP KICK with message") {
-  using irclog2json::message::MadokaIso2022JpLineConverter;
-  using irclog2json::message::MadokaLineConverter;
+  using irclog2json::message::MadokaIso2022JpLineParser;
+  using irclog2json::message::MadokaLineParser;
 
   struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
   const std::string channel{"cre"};
-  auto converter_madoka =
-      std::make_unique<MadokaLineConverter>(channel, tm_date);
-  MadokaIso2022JpLineConverter converter{std::move(converter_madoka)};
+  auto parser_madoka = std::make_unique<MadokaLineParser>(channel, tm_date);
+  MadokaIso2022JpLineParser parser{std::move(parser_madoka)};
 
   /*
    * "08:54:52 - ocha by Toybox from #cre (ごめんね。)"
@@ -34,7 +33,7 @@ TEST_CASE("Madoka ISO-2022-JP KICK with message") {
    * 00000020: 6372 6520 281b 2442 2434 2461 2473 244d  cre (.$B$4$a$s$M
    * 00000030: 2123 1b28 4229 0a                        !#.(B).
    */
-  const auto m = converter.ToMessage(
+  const auto m = parser.ToMessage(
       "08:54:52 - ocha by Toybox from #cre ("
       "\x1B\x24\x42\x24\x34\x24\x61\x24\x73\x24\x4D\x21\x23\x1B\x28\x42"
       ")");
@@ -73,17 +72,16 @@ TEST_CASE("Madoka ISO-2022-JP KICK with message") {
 }
 
 TEST_CASE("Madoka ISO-2022-JP KICK with message 最後にASCII選択なし") {
-  using irclog2json::message::MadokaIso2022JpLineConverter;
-  using irclog2json::message::MadokaLineConverter;
+  using irclog2json::message::MadokaIso2022JpLineParser;
+  using irclog2json::message::MadokaLineParser;
 
   struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
   const std::string channel{"cre"};
-  auto converter_madoka =
-      std::make_unique<MadokaLineConverter>(channel, tm_date);
-  MadokaIso2022JpLineConverter converter{std::move(converter_madoka)};
+  auto parser_madoka = std::make_unique<MadokaLineParser>(channel, tm_date);
+  MadokaIso2022JpLineParser parser{std::move(parser_madoka)};
 
   /*
    * "08:54:52 - ocha by Toybox from #cre (ごめんね。)"
@@ -94,9 +92,9 @@ TEST_CASE("Madoka ISO-2022-JP KICK with message 最後にASCII選択なし") {
    * 00000030: 2123 1b28 4229 0a                        !#.(B).
    */
   const auto m =
-      converter.ToMessage("08:54:52 - ocha by Toybox from #cre ("
-                          "\x1B\x24\x42\x24\x34\x24\x61\x24\x73\x24\x4D\x21\x23"
-                          ")");
+      parser.ToMessage("08:54:52 - ocha by Toybox from #cre ("
+                       "\x1B\x24\x42\x24\x34\x24\x61\x24\x73\x24\x4D\x21\x23"
+                       ")");
 
   REQUIRE(m);
 
@@ -132,19 +130,18 @@ TEST_CASE("Madoka ISO-2022-JP KICK with message 最後にASCII選択なし") {
 }
 
 TEST_CASE("Madoka ISO-2022-JP KICK with message containing mIRC codes") {
-  using irclog2json::message::MadokaIso2022JpLineConverter;
-  using irclog2json::message::MadokaLineConverter;
+  using irclog2json::message::MadokaIso2022JpLineParser;
+  using irclog2json::message::MadokaLineParser;
 
   struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
   const std::string channel{"cre"};
-  auto converter_madoka =
-      std::make_unique<MadokaLineConverter>(channel, tm_date);
-  MadokaIso2022JpLineConverter converter{std::move(converter_madoka)};
+  auto parser_madoka = std::make_unique<MadokaLineParser>(channel, tm_date);
+  MadokaIso2022JpLineParser parser{std::move(parser_madoka)};
 
-  const auto m = converter.ToMessage(
+  const auto m = parser.ToMessage(
       "08:54:52 - ocha by Toybox from #cre ("
       "\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0B\x0C\x0E\x0F"
       "\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1C\x1D\x1E\x1F"

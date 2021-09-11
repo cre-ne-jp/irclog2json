@@ -3,10 +3,10 @@
 #include <regex>
 #include <string>
 
-#include "line_converter_re.h"
-#include "utf8_line_converter.h"
+#include "line_parser_re.h"
+#include "utf8_line_parser.h"
 
-#include "madoka_log_line_converter.h"
+#include "madoka_line_parser.h"
 #include "madoka_re.h"
 
 #include "message_base.h"
@@ -14,14 +14,15 @@
 #include "basic_message.h"
 #include "join.h"
 #include "kick.h"
+#include "madoka_auto_down.h"
 
 namespace irclog2json {
 namespace message {
 
-MadokaLineConverter::~MadokaLineConverter() = default;
+MadokaLineParser::~MadokaLineParser() = default;
 
 std::unique_ptr<MessageBase>
-MadokaLineConverter::DoToMessage(std::string const& line) const {
+MadokaLineParser::DoToMessage(std::string const& line) const {
   std::smatch m;
   struct tm timestamp = {};
 
@@ -105,6 +106,11 @@ MadokaLineConverter::DoToMessage(std::string const& line) const {
 
     return std::make_unique<BasicMessage>("TOPIC", channel_, timestamp, nick,
                                           message);
+  }
+
+  if (std::regex_match(line, m, madoka::ReAutoDown)) {
+    timestamp = GetTimestamp(m);
+    return std::make_unique<MadokaAutoDown>(channel_, timestamp);
   }
 
   return std::unique_ptr<MessageBase>{};

@@ -3,19 +3,19 @@
 #include <memory>
 #include <string>
 
-#include "iso_2022_jp_line_converter.h"
+#include "iso_2022_jp_line_parser.h"
 
-#include "tiarra_log_line_converter.h"
+#include "tiarra_line_parser.h"
 
 namespace irclog2json {
 namespace message {
 
-/** ISO-2022-JPのTiarraログの行変換器。 */
-class TiarraIso2022JpLineConverter : public Iso2022JpLineConverter {
+/** ISO-2022-JPのTiarraログの行解析器。 */
+class TiarraIso2022JpLineParser : public Iso2022JpLineParser {
 public:
-  TiarraIso2022JpLineConverter(
-      std::unique_ptr<TiarraLineConverter>&& utf8_line_converter);
-  virtual ~TiarraIso2022JpLineConverter();
+  TiarraIso2022JpLineParser(
+      std::unique_ptr<TiarraLineParser>&& utf8_line_parser);
+  virtual ~TiarraIso2022JpLineParser();
 
 private:
   /**

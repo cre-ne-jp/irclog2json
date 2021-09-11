@@ -6,20 +6,21 @@
 
 #include <picojson.h>
 
+#include "message/madoka_line_parser.h"
 #include "message/message_base.h"
-#include "message/madoka_log_line_converter.h"
 
 #include "tests/test_helper.h"
 
 TEST_CASE("Madoka JOIN from FQDN") {
-  using irclog2json::message::MadokaLineConverter;
+  using irclog2json::message::MadokaLineParser;
 
-  struct tm tm_date{};
+  struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
-  MadokaLineConverter converter{"もの書き", tm_date};
-  const auto m = converter.ToMessage("05:00:17 + dice2(~dice@sv1.trpg.net) to #もの書き");
+  MadokaLineParser parser{"もの書き", tm_date};
+  const auto m =
+      parser.ToMessage("05:00:17 + dice2(~dice@sv1.trpg.net) to #もの書き");
 
   REQUIRE(m);
 
@@ -55,14 +56,15 @@ TEST_CASE("Madoka JOIN from FQDN") {
 }
 
 TEST_CASE("Madoka JOIN from IP") {
-  using irclog2json::message::MadokaLineConverter;
+  using irclog2json::message::MadokaLineParser;
 
-  struct tm tm_date{};
+  struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
-  MadokaLineConverter converter{"もの書き", tm_date};
-  const auto m = converter.ToMessage("05:00:17 + dice2(~dice@192.168.0.1) to #もの書き");
+  MadokaLineParser parser{"もの書き", tm_date};
+  const auto m =
+      parser.ToMessage("05:00:17 + dice2(~dice@192.168.0.1) to #もの書き");
 
   REQUIRE(m);
 
@@ -98,14 +100,15 @@ TEST_CASE("Madoka JOIN from IP") {
 }
 
 TEST_CASE("Madoka JOIN with operator") {
-  using irclog2json::message::MadokaLineConverter;
+  using irclog2json::message::MadokaLineParser;
 
-  struct tm tm_date{};
+  struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
-  MadokaLineConverter converter{"もの書き", tm_date};
-  const auto m = converter.ToMessage("05:00:17 + dice2(~dice@sv1.trpg.net) to #もの書き with +o");
+  MadokaLineParser parser{"もの書き", tm_date};
+  const auto m = parser.ToMessage(
+      "05:00:17 + dice2(~dice@sv1.trpg.net) to #もの書き with +o");
 
   REQUIRE(m);
 

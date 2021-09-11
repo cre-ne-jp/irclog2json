@@ -6,7 +6,7 @@
 
 #include <picojson.h>
 
-#include "message/madoka_log_line_converter.h"
+#include "message/madoka_line_parser.h"
 #include "message/message_base.h"
 
 #include "tests/test_helper.h"
@@ -14,15 +14,15 @@
 // Madokaの場合はPRIVMSGとNOTICEとで判定条件がほぼ同じなので、
 // 見分けられないかもしれない
 TEST_CASE("Madoka NOTICE") {
-  using irclog2json::message::MadokaLineConverter;
+  using irclog2json::message::MadokaLineParser;
 
   struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
-  MadokaLineConverter converter{"もの書き", tm_date};
+  MadokaLineParser parser{"もの書き", tm_date};
   const auto m =
-      converter.ToMessage("12:34:56 (#もの書き:Toybox) FetchTitle: cre");
+      parser.ToMessage("12:34:56 (#もの書き:Toybox) FetchTitle: cre");
 
   REQUIRE(m);
 
@@ -50,14 +50,14 @@ TEST_CASE("Madoka NOTICE") {
 }
 
 TEST_CASE("Madoka NOTICE containing mIRC codes") {
-  using irclog2json::message::MadokaLineConverter;
+  using irclog2json::message::MadokaLineParser;
 
   struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
-  MadokaLineConverter converter{"もの書き", tm_date};
-  const auto m = converter.ToMessage(
+  MadokaLineParser parser{"もの書き", tm_date};
+  const auto m = parser.ToMessage(
       "12:34:56 (#もの書き:Toybox) "
       "\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0B\x0C\x0E\x0F"
       "\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F"
