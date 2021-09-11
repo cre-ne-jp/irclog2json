@@ -7,8 +7,8 @@ on:
   pull_request: {}
 
 jobs:
-  build_and_test:
-    name: Build and Test
+  build_and_test_ubuntu:
+    name: Build and Test on Ubuntu
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, '[ci skip]')"
     steps:
@@ -25,11 +25,38 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=Yes ..
+          cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON ..
       - name: Build
         working-directory: build
         run: |
           make -j$(nproc)
+      - name: Test
+        working-directory: build
+        run: |
+          ctest --output-on-failure
+  build_and_test_macos:
+    name: Build and Test on macOS
+    runs-on: macos-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, '[ci skip]')"
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Install dependencies
+        run: |
+          brew update
+          brew install \
+            cmake \
+            icu4c
+      - name: Run CMake
+        run: |
+          mkdir build
+          cd build
+          PKG_CONFIG_PATH="$(brew --prefix icu4c)/lib/pkgconfig" cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON ..
+      - name: Build
+        working-directory: build
+        run: |
+          make -j$(sysctl -n hw.logicalcpu)
       - name: Test
         working-directory: build
         run: |
