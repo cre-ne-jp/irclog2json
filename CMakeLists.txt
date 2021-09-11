@@ -44,7 +44,7 @@ add_library(${target_common_lib}
   message/kick.cpp
   message/madoka_auto_down.cpp
 
-  converter.cpp
+  basic_irc_log_parser.cpp
 )
 
 set(target irclog2json)

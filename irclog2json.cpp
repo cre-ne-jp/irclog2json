@@ -1,4 +1,4 @@
-#include "converter.h"
+#include "basic_irc_log_parser.h"
 #include "options.h"
 
 #include "message/line_converter.h"
@@ -242,7 +242,7 @@ ConvertLogToJsonObjects(std::ifstream& ifs, std::string const& channel,
     return picojson::value{picojson::array{}};
   }
 
-  irclog2json::Converter converter{&ifs, std::move(line_converter)};
+  irclog2json::BasicIrcLogParser converter{&ifs, std::move(line_converter)};
   std::vector<std::unique_ptr<MessageBase>> messages =
       converter.ExtractMessages();
 
