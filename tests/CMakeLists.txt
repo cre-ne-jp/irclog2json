@@ -37,6 +37,8 @@ add_executable(${test_target}
   madoka_iso-2022-jp/kick.cpp
 
   madoka_iso-2022-jp/time_tone.cpp
+
+  file_system_manager_test.cpp
 )
 target_link_libraries(${test_target}
   ${target_common_lib}

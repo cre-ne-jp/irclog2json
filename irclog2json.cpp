@@ -1,5 +1,7 @@
 #include "options.h"
 
+#include "file_name_manager.h"
+
 #include "message/line_parser.h"
 
 #include "message/iso_2022_jp_line_parser.h"
@@ -94,53 +96,48 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  // basename(3) が文字列を変更するので退避する意味も含む
-  std::string filename(argv[0]);
+  std::string input_path{argv[0]};
+  irclog2json::FileNameManager file_name_manager{input_path};
 
-  std::string channel(argv[1]);
-
-  // ここで argv[0] は変更される
-  char* file_basename = basename(argv[0]);
-
-  // ファイル名から日付を抽出する
-  struct tm tm_date;
-  char* rest = strptime(file_basename, "%Y%m%d.txt", &tm_date);
-  if (rest == NULL || *rest != '\0') {
-    std::cerr << filename << ": Invalid date" << std::endl;
+  // ログの日付
+  std::optional<struct tm> tm_date = file_name_manager.GetDate();
+  if (!tm_date) {
+    std::cerr << input_path << ": Invalid date" << std::endl;
     return 1;
   }
 
-  // 出力ファイル名を決める
-  std::string out_filename(filename);
-  // 末尾の .txt -> .json
-  out_filename.replace(out_filename.size() - 3, 3, "json");
+  // 出力ファイルのパス
+  std::string output_path = file_name_manager.GetOutputPath();
+
+  // チャンネル名
+  std::string channel{argv[1]};
 
   std::optional<picojson::value> result;
   {
     std::ifstream ifs;
 
-    ifs.open(filename);
+    ifs.open(input_path);
     if (ifs.fail()) {
-      std::perror(filename.c_str());
+      std::perror(input_path.c_str());
       return 1;
     }
 
-    result = ConvertLogToJsonObjects(&ifs, channel, tm_date, options);
+    result = ConvertLogToJsonObjects(&ifs, channel, *tm_date, options);
   }
 
   {
     std::ofstream ofs;
 
-    ofs.open(out_filename);
+    ofs.open(output_path);
     if (ofs.fail()) {
-      std::perror(out_filename.c_str());
+      std::perror(output_path.c_str());
       return 1;
     }
 
     ofs << result->serialize(options.pretty);
   }
 
-  std::cout << "Output " << out_filename << '.' << std::endl;
+  std::cout << "Output " << output_path << '.' << std::endl;
 
   return 0;
 }

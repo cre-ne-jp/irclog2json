@@ -46,6 +46,8 @@ add_library(${target_common_lib}
 
   basic_irc_log_parser.cpp
   madoka_log_parser.cpp
+
+  file_name_manager.cpp
 )
 
 set(target irclog2json)
