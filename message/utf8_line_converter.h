@@ -10,8 +10,8 @@
 namespace irclog2json {
 namespace message {
 
-/** UTF-8のIRCログの行変換器の抽象クラス。 */
-class UTF8LineConverter : public LineConverter {
+/** UTF-8のIRCログの行解析器の抽象クラス。 */
+class UTF8LineParser : public LineParser {
 public:
   /**
    * @brief 制御文字を除去する。
@@ -24,14 +24,14 @@ public:
    * @param channel チャンネル名。
    * @param tm_date ログの日付。
    */
-  UTF8LineConverter(const std::string& channel, const struct tm& tm_date);
+  UTF8LineParser(const std::string& channel, const struct tm& tm_date);
 
-  virtual ~UTF8LineConverter() = default;
+  virtual ~UTF8LineParser() = default;
 
-  UTF8LineConverter(const UTF8LineConverter&) = delete;
-  UTF8LineConverter(UTF8LineConverter&&) = delete;
-  UTF8LineConverter& operator=(const UTF8LineConverter&) = delete;
-  UTF8LineConverter& operator=(UTF8LineConverter&&) = delete;
+  UTF8LineParser(const UTF8LineParser&) = delete;
+  UTF8LineParser(UTF8LineParser&&) = delete;
+  UTF8LineParser& operator=(const UTF8LineParser&) = delete;
+  UTF8LineParser& operator=(UTF8LineParser&&) = delete;
 
 protected:
   /** チャンネル名。 */

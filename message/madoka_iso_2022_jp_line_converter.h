@@ -10,12 +10,12 @@
 namespace irclog2json {
 namespace message {
 
-/** ISO-2022-JPのMadokaログの行変換器。 */
-class MadokaIso2022JpLineConverter : public Iso2022JpLineConverter {
+/** ISO-2022-JPのMadokaログの行解析器。 */
+class MadokaIso2022JpLineParser : public Iso2022JpLineParser {
 public:
-  MadokaIso2022JpLineConverter(
-      std::unique_ptr<MadokaLineConverter>&& utf_8_line_converter);
-  virtual ~MadokaIso2022JpLineConverter();
+  MadokaIso2022JpLineParser(
+      std::unique_ptr<MadokaLineParser>&& utf_8_line_parser);
+  virtual ~MadokaIso2022JpLineParser();
 
 private:
   /**

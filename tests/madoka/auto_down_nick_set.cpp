@@ -20,7 +20,7 @@
 TEST_CASE("Madoka: auto downがない場合、解析に成功する") {
   using irclog2json::MadokaLogParser;
   using irclog2json::message::MadokaAutoDown;
-  using irclog2json::message::MadokaLineConverter;
+  using irclog2json::message::MadokaLineParser;
   using irclog2json::message::MessageBase;
 
   struct tm tm_date {};
@@ -34,9 +34,8 @@ TEST_CASE("Madoka: auto downがない場合、解析に成功する") {
                   "12:58:31 [!] nick changed (cre_log -> cre_log2)\n"};
   std::istringstream log_ss{log};
 
-  auto line_converter =
-      std::make_unique<MadokaLineConverter>("もの書き", tm_date);
-  MadokaLogParser parser{&log_ss, std::move(line_converter)};
+  auto line_parser = std::make_unique<MadokaLineParser>("もの書き", tm_date);
+  MadokaLogParser parser{&log_ss, std::move(line_parser)};
 
   auto messages = parser.ExtractMessages();
 
@@ -46,7 +45,7 @@ TEST_CASE("Madoka: auto downがない場合、解析に成功する") {
 TEST_CASE("Madoka auto down: ニックネームが正しく設定される") {
   using irclog2json::MadokaLogParser;
   using irclog2json::message::MadokaAutoDown;
-  using irclog2json::message::MadokaLineConverter;
+  using irclog2json::message::MadokaLineParser;
   using irclog2json::message::MessageBase;
 
   struct tm tm_date {};
@@ -65,9 +64,8 @@ TEST_CASE("Madoka auto down: ニックネームが正しく設定される") {
                   "13:23:34 + cre(~cre@example.net) to #もの書き\n"};
   std::istringstream log_ss{log};
 
-  auto line_converter =
-      std::make_unique<MadokaLineConverter>("もの書き", tm_date);
-  MadokaLogParser parser{&log_ss, std::move(line_converter)};
+  auto line_parser = std::make_unique<MadokaLineParser>("もの書き", tm_date);
+  MadokaLogParser parser{&log_ss, std::move(line_parser)};
 
   auto messages = parser.ExtractMessages();
 

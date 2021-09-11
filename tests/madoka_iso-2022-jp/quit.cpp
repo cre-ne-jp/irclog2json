@@ -14,17 +14,16 @@
 #include "tests/test_helper.h"
 
 TEST_CASE("Madoka ISO-2022-JP QUIT with message") {
-  using irclog2json::message::MadokaIso2022JpLineConverter;
-  using irclog2json::message::MadokaLineConverter;
+  using irclog2json::message::MadokaIso2022JpLineParser;
+  using irclog2json::message::MadokaLineParser;
 
   struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
   const std::string channel{"cre"};
-  auto converter_madoka =
-      std::make_unique<MadokaLineConverter>(channel, tm_date);
-  MadokaIso2022JpLineConverter converter{std::move(converter_madoka)};
+  auto parser_madoka = std::make_unique<MadokaLineParser>(channel, tm_date);
+  MadokaIso2022JpLineParser parser{std::move(parser_madoka)};
 
   /*
    * "19:04:12 ! ocha (\"さようなら\")"
@@ -33,7 +32,7 @@ TEST_CASE("Madoka ISO-2022-JP QUIT with message") {
    * 00000010: 2822 1b24 4224 3524 6824 2624 4a24 691b  (".$B$5$h$&$J$i.
    * 00000020: 2842 2229 0a                             (B").
    */
-  const auto m = converter.ToMessage(
+  const auto m = parser.ToMessage(
       R"(19:04:12 ! ocha (")"
       "\x1B\x24\x42\x24\x35\x24\x68\x24\x26\x24\x4A\x24\x69\x1B\x28\x42"
       R"raw("))raw");
@@ -68,17 +67,16 @@ TEST_CASE("Madoka ISO-2022-JP QUIT with message") {
 }
 
 TEST_CASE("Madoka ISO-2022-JP QUIT with message 最後にASCII選択なし") {
-  using irclog2json::message::MadokaIso2022JpLineConverter;
-  using irclog2json::message::MadokaLineConverter;
+  using irclog2json::message::MadokaIso2022JpLineParser;
+  using irclog2json::message::MadokaLineParser;
 
   struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
   const std::string channel{"cre"};
-  auto converter_madoka =
-      std::make_unique<MadokaLineConverter>(channel, tm_date);
-  MadokaIso2022JpLineConverter converter{std::move(converter_madoka)};
+  auto parser_madoka = std::make_unique<MadokaLineParser>(channel, tm_date);
+  MadokaIso2022JpLineParser parser{std::move(parser_madoka)};
 
   /*
    * "19:04:12 ! ocha (\"さようなら\")"
@@ -88,9 +86,9 @@ TEST_CASE("Madoka ISO-2022-JP QUIT with message 最後にASCII選択なし") {
    * 00000020: 2842 2229 0a                             (B").
    */
   const auto m =
-      converter.ToMessage(R"(19:04:12 ! ocha (")"
-                          "\x1B\x24\x42\x24\x35\x24\x68\x24\x26\x24\x4A\x24\x69"
-                          R"raw("))raw");
+      parser.ToMessage(R"(19:04:12 ! ocha (")"
+                       "\x1B\x24\x42\x24\x35\x24\x68\x24\x26\x24\x4A\x24\x69"
+                       R"raw("))raw");
 
   REQUIRE(m);
 
@@ -122,17 +120,16 @@ TEST_CASE("Madoka ISO-2022-JP QUIT with message 最後にASCII選択なし") {
 }
 
 TEST_CASE("Madoka ISO-2022-JP QUIT with unquoted message") {
-  using irclog2json::message::MadokaIso2022JpLineConverter;
-  using irclog2json::message::MadokaLineConverter;
+  using irclog2json::message::MadokaIso2022JpLineParser;
+  using irclog2json::message::MadokaLineParser;
 
   struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
   const std::string channel{"cre"};
-  auto converter_madoka =
-      std::make_unique<MadokaLineConverter>(channel, tm_date);
-  MadokaIso2022JpLineConverter converter{std::move(converter_madoka)};
+  auto parser_madoka = std::make_unique<MadokaLineParser>(channel, tm_date);
+  MadokaIso2022JpLineParser parser{std::move(parser_madoka)};
 
   /*
    * "19:04:12 ! ocha (さようなら)"
@@ -141,7 +138,7 @@ TEST_CASE("Madoka ISO-2022-JP QUIT with unquoted message") {
    * 00000010: 281b 2442 2435 2468 2426 244a 2469 1b28  (.$B$5$h$&$J$i.(
    * 00000020: 4229 0a                                  B).
    */
-  const auto m = converter.ToMessage(
+  const auto m = parser.ToMessage(
       "19:04:12 ! ocha ("
       "\x1B\x24\x42\x24\x35\x24\x68\x24\x26\x24\x4A\x24\x69\x1B\x28\x42"
       ")");
@@ -176,17 +173,16 @@ TEST_CASE("Madoka ISO-2022-JP QUIT with unquoted message") {
 }
 
 TEST_CASE("Madoka ISO-2022-JP QUIT with unquoted message 最後にASCII選択なし") {
-  using irclog2json::message::MadokaIso2022JpLineConverter;
-  using irclog2json::message::MadokaLineConverter;
+  using irclog2json::message::MadokaIso2022JpLineParser;
+  using irclog2json::message::MadokaLineParser;
 
   struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
   const std::string channel{"cre"};
-  auto converter_madoka =
-      std::make_unique<MadokaLineConverter>(channel, tm_date);
-  MadokaIso2022JpLineConverter converter{std::move(converter_madoka)};
+  auto parser_madoka = std::make_unique<MadokaLineParser>(channel, tm_date);
+  MadokaIso2022JpLineParser parser{std::move(parser_madoka)};
 
   /*
    * "19:04:12 ! ocha (さようなら)"
@@ -196,9 +192,9 @@ TEST_CASE("Madoka ISO-2022-JP QUIT with unquoted message 最後にASCII選択な
    * 00000020: 4229 0a                                  B).
    */
   const auto m =
-      converter.ToMessage("19:04:12 ! ocha ("
-                          "\x1B\x24\x42\x24\x35\x24\x68\x24\x26\x24\x4A\x24\x69"
-                          ")");
+      parser.ToMessage("19:04:12 ! ocha ("
+                       "\x1B\x24\x42\x24\x35\x24\x68\x24\x26\x24\x4A\x24\x69"
+                       ")");
 
   REQUIRE(m);
 
@@ -231,19 +227,18 @@ TEST_CASE("Madoka ISO-2022-JP QUIT with unquoted message 最後にASCII選択な
 
 TEST_CASE(
     "Madoka ISO-2022-JP QUIT with unquoted message containing mIRC codes") {
-  using irclog2json::message::MadokaIso2022JpLineConverter;
-  using irclog2json::message::MadokaLineConverter;
+  using irclog2json::message::MadokaIso2022JpLineParser;
+  using irclog2json::message::MadokaLineParser;
 
   struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
   const std::string channel{"cre"};
-  auto converter_madoka =
-      std::make_unique<MadokaLineConverter>(channel, tm_date);
-  MadokaIso2022JpLineConverter converter{std::move(converter_madoka)};
+  auto parser_madoka = std::make_unique<MadokaLineParser>(channel, tm_date);
+  MadokaIso2022JpLineParser parser{std::move(parser_madoka)};
 
-  const auto m = converter.ToMessage(
+  const auto m = parser.ToMessage(
       "19:04:12 ! ocha ("
       "\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0B\x0C\x0E\x0F"
       "\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1C\x1D\x1E\x1F"

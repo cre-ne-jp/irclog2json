@@ -15,10 +15,10 @@ class MadokaLogParser : public IrcLogParser {
 public:
   /**
    * @param is IRCログの入力ストリーム。
-   * @param line_converter 行解析器。
+   * @param line_parser 行解析器。
    */
   MadokaLogParser(std::istream* is,
-                  std::unique_ptr<message::LineConverter>&& line_converter);
+                  std::unique_ptr<message::LineParser>&& line_parser);
   virtual ~MadokaLogParser();
 
   MadokaLogParser(const MadokaLogParser&) = delete;

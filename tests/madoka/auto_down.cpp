@@ -12,14 +12,14 @@
 #include "tests/test_helper.h"
 
 TEST_CASE("Madoka auto down") {
-  using irclog2json::message::MadokaLineConverter;
+  using irclog2json::message::MadokaLineParser;
 
   struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
-  MadokaLineConverter converter{"もの書き", tm_date};
-  const auto m = converter.ToMessage("11:00:00 [!] auto down");
+  MadokaLineParser parser{"もの書き", tm_date};
+  const auto m = parser.ToMessage("11:00:00 [!] auto down");
 
   REQUIRE(m);
 

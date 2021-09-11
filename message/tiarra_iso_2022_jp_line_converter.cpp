@@ -9,15 +9,15 @@
 namespace irclog2json {
 namespace message {
 
-TiarraIso2022JpLineConverter::TiarraIso2022JpLineConverter(
-    std::unique_ptr<TiarraLineConverter>&& utf8_line_converter)
-    : Iso2022JpLineConverter::Iso2022JpLineConverter{std::move(utf8_line_converter)} {
+TiarraIso2022JpLineParser::TiarraIso2022JpLineParser(
+    std::unique_ptr<TiarraLineParser>&& utf8_line_parser)
+    : Iso2022JpLineParser::Iso2022JpLineParser{std::move(utf8_line_parser)} {
 }
 
-TiarraIso2022JpLineConverter::~TiarraIso2022JpLineConverter() = default;
+TiarraIso2022JpLineParser::~TiarraIso2022JpLineParser() = default;
 
-Iso2022JpCharsetFixResult TiarraIso2022JpLineConverter::DoForceToEndInASCII(
-    const std::string& line) const {
+Iso2022JpCharsetFixResult
+TiarraIso2022JpLineParser::DoForceToEndInASCII(const std::string& line) const {
   // TODO: 修正処理を書く
   return Iso2022JpCharsetFixResult{line, false};
 }

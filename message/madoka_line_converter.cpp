@@ -19,10 +19,10 @@
 namespace irclog2json {
 namespace message {
 
-MadokaLineConverter::~MadokaLineConverter() = default;
+MadokaLineParser::~MadokaLineParser() = default;
 
 std::unique_ptr<MessageBase>
-MadokaLineConverter::DoToMessage(std::string const& line) const {
+MadokaLineParser::DoToMessage(std::string const& line) const {
   std::smatch m;
   struct tm timestamp = {};
 

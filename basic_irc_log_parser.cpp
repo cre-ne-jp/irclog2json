@@ -11,11 +11,10 @@
 namespace irclog2json {
 
 BasicIrcLogParser::BasicIrcLogParser(
-    std::istream* const is,
-    std::unique_ptr<message::LineConverter>&& line_converter)
+    std::istream* const is, std::unique_ptr<message::LineParser>&& line_parser)
     : IrcLogParser::IrcLogParser{},
       is_{is},
-      line_converter_{std::move(line_converter)} {
+      line_parser_{std::move(line_parser)} {
 }
 
 BasicIrcLogParser::~BasicIrcLogParser() = default;
@@ -28,7 +27,7 @@ BasicIrcLogParser::DoExtractMessages() const {
   while (std::getline(*is_, line)) {
     if (!line.empty()) {
       std::unique_ptr<message::MessageBase> message =
-          line_converter_->ToMessage(line);
+          line_parser_->ToMessage(line);
       if (message) {
         messages.push_back(std::move(message));
       } else {

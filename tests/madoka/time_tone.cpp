@@ -12,27 +12,27 @@
 #include "tests/test_helper.h"
 
 TEST_CASE("Madoka time tone") {
-  using irclog2json::message::MadokaLineConverter;
+  using irclog2json::message::MadokaLineParser;
 
   struct tm tm_date {};
 
   strptime("2000-02-27", "%F", &tm_date);
 
-  MadokaLineConverter converter{"kataribe", tm_date};
-  const auto m = converter.ToMessage("2000/02/07 03:00:00");
+  MadokaLineParser parser{"kataribe", tm_date};
+  const auto m = parser.ToMessage("2000/02/07 03:00:00");
 
   REQUIRE_FALSE(m);
 }
 
 TEST_CASE("Madoka time tone at EOF") {
-  using irclog2json::message::MadokaLineConverter;
+  using irclog2json::message::MadokaLineParser;
 
   struct tm tm_date {};
 
   strptime("2000-02-07", "%F", &tm_date);
 
-  MadokaLineConverter converter{"kataribe", tm_date};
-  const auto m = converter.ToMessage("2000/02/08 00:00:00 end");
+  MadokaLineParser parser{"kataribe", tm_date};
+  const auto m = parser.ToMessage("2000/02/08 00:00:00 end");
 
   REQUIRE_FALSE(m);
 }

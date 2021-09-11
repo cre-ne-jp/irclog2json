@@ -17,8 +17,8 @@ using message::MadokaAutoDown;
 using message::MessageBase;
 
 MadokaLogParser::MadokaLogParser(
-    std::istream* is, std::unique_ptr<message::LineConverter>&& line_converter)
-    : basic_parser_{is, std::move(line_converter)} {
+    std::istream* is, std::unique_ptr<message::LineParser>&& line_parser)
+    : basic_parser_{is, std::move(line_parser)} {
 }
 
 MadokaLogParser::~MadokaLogParser() = default;

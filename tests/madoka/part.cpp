@@ -12,15 +12,15 @@
 #include "tests/test_helper.h"
 
 TEST_CASE("Madoka PART with message") {
-  using irclog2json::message::MadokaLineConverter;
+  using irclog2json::message::MadokaLineParser;
 
   struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
-  MadokaLineConverter converter{"もの書き", tm_date};
+  MadokaLineParser parser{"もの書き", tm_date};
   const auto m =
-      converter.ToMessage("19:04:12 - ocha from #もの書き (さようなら)");
+      parser.ToMessage("19:04:12 - ocha from #もの書き (さようなら)");
 
   REQUIRE(m);
 
@@ -48,14 +48,14 @@ TEST_CASE("Madoka PART with message") {
 }
 
 TEST_CASE("Madoka PART with message containing mIRC codes") {
-  using irclog2json::message::MadokaLineConverter;
+  using irclog2json::message::MadokaLineParser;
 
   struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
-  MadokaLineConverter converter{"もの書き", tm_date};
-  const auto m = converter.ToMessage(
+  MadokaLineParser parser{"もの書き", tm_date};
+  const auto m = parser.ToMessage(
       "19:04:12 - ocha from #もの書き ("
       "\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0B\x0C\x0E\x0F"
       "\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F"

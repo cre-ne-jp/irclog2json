@@ -18,10 +18,10 @@ class BasicIrcLogParser : public IrcLogParser {
 public:
   /**
    * @param is IRCログの入力ストリーム。
-   * @param line_converter 行解析器。
+   * @param line_parser 行解析器。
    */
   BasicIrcLogParser(std::istream* is,
-                    std::unique_ptr<message::LineConverter>&& line_converter);
+                    std::unique_ptr<message::LineParser>&& line_parser);
   virtual ~BasicIrcLogParser();
 
   BasicIrcLogParser(const BasicIrcLogParser&) = delete;
@@ -33,7 +33,7 @@ private:
   /** IRCログの入力ストリーム。 */
   std::istream* const is_;
   /** 行解析器。 */
-  std::unique_ptr<message::LineConverter> line_converter_;
+  std::unique_ptr<message::LineParser> line_parser_;
 
   /** ログ解析およびメッセージ抽出の実装。 */
   virtual std::vector<std::unique_ptr<message::MessageBase>>

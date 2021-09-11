@@ -12,14 +12,14 @@
 #include "tests/test_helper.h"
 
 TEST_CASE("Tiarra PRIVMSG") {
-  using irclog2json::message::TiarraLineConverter;
+  using irclog2json::message::TiarraLineParser;
 
   struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
-  TiarraLineConverter converter{"cre", tm_date};
-  const auto m = converter.ToMessage("12:34:56 <Toybox> てすと");
+  TiarraLineParser parser{"cre", tm_date};
+  const auto m = parser.ToMessage("12:34:56 <Toybox> てすと");
 
   REQUIRE(m);
 
@@ -47,14 +47,14 @@ TEST_CASE("Tiarra PRIVMSG") {
 }
 
 TEST_CASE("Tiarra PRIVMSG containing mIRC codes") {
-  using irclog2json::message::TiarraLineConverter;
+  using irclog2json::message::TiarraLineParser;
 
   struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
-  TiarraLineConverter converter{"cre", tm_date};
-  const auto m = converter.ToMessage(
+  TiarraLineParser parser{"cre", tm_date};
+  const auto m = parser.ToMessage(
       "12:34:56 <Toybox> "
       "\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0B\x0C\x0E\x0F"
       "\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F"

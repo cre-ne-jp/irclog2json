@@ -8,16 +8,16 @@
 namespace irclog2json {
 namespace message {
 
-/** IRCログ行変換器の抽象クラス。 */
-class LineConverter {
+/** IRCログ行解析器の抽象クラス。 */
+class LineParser {
 public:
-  LineConverter() = default;
-  virtual ~LineConverter() = default;
+  LineParser() = default;
+  virtual ~LineParser() = default;
 
-  LineConverter(const LineConverter&) = delete;
-  LineConverter(LineConverter&&) = delete;
-  LineConverter& operator=(const LineConverter&) = delete;
-  LineConverter& operator=(LineConverter&&) = delete;
+  LineParser(const LineParser&) = delete;
+  LineParser(LineParser&&) = delete;
+  LineParser& operator=(const LineParser&) = delete;
+  LineParser& operator=(LineParser&&) = delete;
 
   /**
    * @brief IRCログの行をメッセージオブジェクトに変換する。

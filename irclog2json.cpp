@@ -208,55 +208,53 @@ ConvertLogToJsonObjects(std::ifstream* ifs, std::string const& channel,
   using irclog2json::IrcLogParser;
   using irclog2json::MadokaLogParser;
 
-  using irclog2json::message::LineConverter;
-  using irclog2json::message::MadokaIso2022JpLineConverter;
-  using irclog2json::message::MadokaLineConverter;
+  using irclog2json::message::LineParser;
+  using irclog2json::message::MadokaIso2022JpLineParser;
+  using irclog2json::message::MadokaLineParser;
   using irclog2json::message::MessageBase;
-  using irclog2json::message::TiarraIso2022JpLineConverter;
-  using irclog2json::message::TiarraLineConverter;
-  using irclog2json::message::UTF8LineConverter;
+  using irclog2json::message::TiarraIso2022JpLineParser;
+  using irclog2json::message::TiarraLineParser;
+  using irclog2json::message::UTF8LineParser;
 
   using LogFormat = irclog2json::Options::LogFormat;
 
   std::unique_ptr<IrcLogParser> parser;
 
   {
-    std::unique_ptr<LineConverter> line_converter;
+    std::unique_ptr<LineParser> line_parser;
 
     switch (options.log_format) {
     case LogFormat::Tiarra: {
       {
-        auto utf8_line_converter =
-            std::make_unique<TiarraLineConverter>(channel, tm_date);
+        auto utf8_line_parser =
+            std::make_unique<TiarraLineParser>(channel, tm_date);
 
         if (options.iso_2022_jp) {
-          line_converter = std::make_unique<TiarraIso2022JpLineConverter>(
-              std::move(utf8_line_converter));
+          line_parser = std::make_unique<TiarraIso2022JpLineParser>(
+              std::move(utf8_line_parser));
         } else {
-          line_converter = std::move(utf8_line_converter);
+          line_parser = std::move(utf8_line_parser);
         }
       }
 
-      parser =
-          std::make_unique<BasicIrcLogParser>(ifs, std::move(line_converter));
+      parser = std::make_unique<BasicIrcLogParser>(ifs, std::move(line_parser));
 
       break;
     }
     case LogFormat::Madoka: {
       {
-        auto utf8_line_converter =
-            std::make_unique<MadokaLineConverter>(channel, tm_date);
+        auto utf8_line_parser =
+            std::make_unique<MadokaLineParser>(channel, tm_date);
 
         if (options.iso_2022_jp) {
-          line_converter = std::make_unique<MadokaIso2022JpLineConverter>(
-              std::move(utf8_line_converter));
+          line_parser = std::make_unique<MadokaIso2022JpLineParser>(
+              std::move(utf8_line_parser));
         } else {
-          line_converter = std::move(utf8_line_converter);
+          line_parser = std::move(utf8_line_parser);
         }
       }
 
-      parser =
-          std::make_unique<MadokaLogParser>(ifs, std::move(line_converter));
+      parser = std::make_unique<MadokaLogParser>(ifs, std::move(line_parser));
 
       break;
     }

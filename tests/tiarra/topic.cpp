@@ -12,14 +12,14 @@
 #include "tests/test_helper.h"
 
 TEST_CASE("Tiarra NOTICE") {
-  using irclog2json::message::TiarraLineConverter;
+  using irclog2json::message::TiarraLineParser;
 
   struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
-  TiarraLineConverter converter{"もの書き予備", tm_date};
-  const auto m = converter.ToMessage(
+  TiarraLineParser parser{"もの書き予備", tm_date};
+  const auto m = parser.ToMessage(
       "09:46:31 Topic of channel #もの書き予備@cre by irc.sougetu.net: "
       "参加歓迎【ログ公開】文章を書くこと読むこと全般(予備その1)");
 
@@ -51,14 +51,14 @@ TEST_CASE("Tiarra NOTICE") {
 }
 
 TEST_CASE("Tiarra NOTICE containing mIRC codes") {
-  using irclog2json::message::TiarraLineConverter;
+  using irclog2json::message::TiarraLineParser;
 
   struct tm tm_date {};
 
   strptime("2021-04-01", "%F", &tm_date);
 
-  TiarraLineConverter converter{"もの書き予備", tm_date};
-  const auto m = converter.ToMessage(
+  TiarraLineParser parser{"もの書き予備", tm_date};
+  const auto m = parser.ToMessage(
       "09:46:31 Topic of channel #もの書き予備@cre by irc.sougetu.net: "
       "\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0B\x0C\x0E\x0F"
       "\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F"

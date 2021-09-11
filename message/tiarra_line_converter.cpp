@@ -18,10 +18,10 @@
 namespace irclog2json {
 namespace message {
 
-TiarraLineConverter::~TiarraLineConverter() = default;
+TiarraLineParser::~TiarraLineParser() = default;
 
 std::unique_ptr<MessageBase>
-TiarraLineConverter::DoToMessage(const std::string& line) const {
+TiarraLineParser::DoToMessage(const std::string& line) const {
   std::smatch m;
   struct tm timestamp = {};
 

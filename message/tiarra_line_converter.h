@@ -10,11 +10,11 @@
 namespace irclog2json {
 namespace message {
 
-/** Tiarraログの行変換器。 */
-class TiarraLineConverter : public UTF8LineConverter {
+/** Tiarraログの行解析器。 */
+class TiarraLineParser : public UTF8LineParser {
 public:
-  using UTF8LineConverter::UTF8LineConverter;
-  virtual ~TiarraLineConverter();
+  using UTF8LineParser::UTF8LineParser;
+  virtual ~TiarraLineParser();
 
 private:
   virtual std::unique_ptr<MessageBase>
