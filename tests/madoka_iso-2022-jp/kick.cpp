@@ -143,6 +143,8 @@ TEST_CASE("Madoka ISO-2022-JP KICK with message containing mIRC codes") {
 
   const auto m = parser.ToMessage(
       "08:54:52 - ocha by Toybox from #cre ("
+      "abc"
+      "\x1B\x24\x42\x24\x46\x24\x39\x24\x48\x1B\x28\x42"
       "\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0B\x0C\x0E\x0F"
       "\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1C\x1D\x1E\x1F"
       "visible characters"
@@ -152,6 +154,7 @@ TEST_CASE("Madoka ISO-2022-JP KICK with message containing mIRC codes") {
 
   const auto o = m->ToJsonObject();
 
-  CHECK_OBJ_STR_EQ(o, "message",
-                   "\x02\x03\x04\x0F\x11\x16\x1D\x1E\x1Fvisible characters");
+  CHECK_OBJ_STR_EQ(
+      o, "message",
+      "abcてすと\x02\x03\x04\x0F\x11\x16\x1D\x1E\x1Fvisible characters");
 }
