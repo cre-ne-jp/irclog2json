@@ -1,5 +1,6 @@
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include <unicode/unistr.h>
@@ -146,16 +147,17 @@ std::string EscapeMIrcPlain(std::string const& s,
 
 void UnescapeMIrcPlain(icu::UnicodeString& s,
                        const std::vector<size_t>& plain_code_indices) {
+  static const std::unordered_map<char16_t, char16_t> ReplaceTable = {
+      {static_cast<char16_t>(CC_EM), u'\u000E'},
+      {static_cast<char16_t>(CC_SUB), u'\u000F'},
+  };
+  static const auto ReplaceTableCEnd = ReplaceTable.cend();
+
+  decltype(ReplaceTable)::const_iterator table_it;
   for (auto i : plain_code_indices) {
-    switch (s[i]) {
-    case static_cast<char16_t>(CC_EM):
-      s.replace(i, 1, u'\u000E');
-      break;
-    case static_cast<char16_t>(CC_SUB):
-      s.replace(i, 1, u'\u000F');
-      break;
-    default:
-      break;
+    table_it = ReplaceTable.find(s[i]);
+    if (table_it != ReplaceTableCEnd) {
+      s.replace(i, 1, table_it->second);
     }
   }
 }
