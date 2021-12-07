@@ -76,9 +76,5 @@ irclog2json --tiarra --pretty /path/to/yyyymmdd.txt チャンネル名
 
 ### データベースへのインポート
 
-import.rbを使います。変換後、以下のコマンドでlog-archiverのデータベースにログをインポートすることができます。
-
-```bash
-cd /path/to/log-archiver
-bin/rails runner -e production /path/to/import.rb /path/to/yyyymmdd.json
-```
+[log-archiver](https://github.com/cre-ne-jp/log-archiver) 附属の data:import:json タスクを使います。
+詳しい使い方は、log-archiver のドキュメントをご覧下さい。
